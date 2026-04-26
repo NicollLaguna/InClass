@@ -1,11 +1,70 @@
 import cv2
 import numpy as np
+from insightface.app import FaceAnalysis
 import os
 import pickle
 from pathlib import Path
 from PIL import Image as PILImage
 from deepface import DeepFace
 from config import settings
+
+app = FaceAnalysis(name='buffalo_l')
+app.prepare(ctx_id=0)
+
+THRESHOLD = 0.6
+
+def obtener_rostro(image):
+    faces = app.get(image)
+
+    if len(faces) == 0:
+        return None
+
+    return faces[0].embedding
+
+def reconocimiento(image, embedding_db):
+    img = ver_imagen(image)
+    emb = obtener_rostro(img)
+
+def comparar_rostros(embedding1, embedding2):
+    embedding1 = embedding1 / np.linalg.norm(embedding1)
+    embedding2 = embedding2 / np.linalg.norm(embedding2)
+
+    similitud = np.dot(embedding1, embedding2)
+    return similitud 
+
+similitud = comparar_rostros(embedding1, embedding2)
+if similitud > THRESHOLD:
+    reconocimiento = True
+else:
+    reconocimiento = False
+
+def ver_imagen(file_bytes):
+    np_arr = np.frombuffer(file_bytes, np.uint8)
+    img = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
+    return img
+
+
+
+    if emb is None:
+        return None
+
+    best_match = None
+    best_score = 0
+
+    for estudiante in embedding_db:
+        sim = compare_faces(emb, estudiante["embedding"])
+
+        if sim > best_score:
+            best_score = sim
+            best_match = estudiante
+
+    if best_score > 0.5:
+        return {
+            "estudiante": best_match,
+            "confianza": best_score
+        }
+
+    return None
 
 class FaceRecognizer:
     def __init__(self):
@@ -134,3 +193,4 @@ class FaceRecognizer:
         return True
 
 recognizer = FaceRecognizer()
+
