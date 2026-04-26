@@ -1,0 +1,17 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.env
+
+# Archivos sensibles
+firebase-service-account.json
+*.json.json
+
+# Data local
+data/faces/
+data/reports/
+
+# DeepFace
+.deepface/
