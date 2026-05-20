@@ -1,7 +1,3 @@
-"""
-Módulo de integración con Pinecone para búsqueda vectorial de embeddings faciales.
-Proporciona una abstracción para operaciones vectoriales con Pinecone.
-"""
 
 import logging
 from datetime import datetime
@@ -20,15 +16,6 @@ logger.setLevel(logging.INFO)
 
 
 class VectorDB:
-    """
-    Gestor de base de datos vectorial con Pinecone.
-    
-    Características:
-    - Almacenamiento y búsqueda de embeddings faciales
-    - Filtrado por metadatos (código, nombre, curso, etc.)
-    - Operaciones CRUD completas
-    - Fallback automático si Pinecone no está disponible
-    """
 
     def __init__(self):
         """Inicializa conexión con Pinecone"""
@@ -55,17 +42,17 @@ class VectorDB:
                     dimension=settings.PINECONE_DIMENSION,  # 512 para buffalo_l
                     metric="cosine"  # Similitud coseno
                 )
-                logger.info(f"✅ Índice '{self.index_name}' creado exitosamente")
+                logger.info(f"Índice '{self.index_name}' creado exitosamente")
             else:
-                logger.info(f"✅ Índice '{self.index_name}' existe")
+                logger.info(f"Índice '{self.index_name}' existe")
             
             # Obtener referencia al índice
             self.index = pinecone.Index(self.index_name)
-            logger.info("✅ Pinecone conectado exitosamente")
+            logger.info("Pinecone conectado exitosamente")
             self.connected = True
         
         except Exception as e:
-            logger.error(f"❌ Error conectando a Pinecone: {e}")
+            logger.error(f"Error conectando a Pinecone: {e}")
             self.connected = False
             self.index = None
 
@@ -76,18 +63,7 @@ class VectorDB:
         codigo: str,
         foto_url: Optional[str] = None
     ) -> bool:
-        """
-        Guarda embedding de estudiante en Pinecone con metadatos.
-        
-        Args:
-            embedding: Embedding normalizado (numpy array)
-            nombre: Nombre del estudiante
-            codigo: Código único (12 dígitos)
-            foto_url: URL de foto almacenada
-        
-        Returns:
-            True si se guardó exitosamente
-        """
+
         try:
             if not self.connected:
                 logger.error("Pinecone no está conectado")
@@ -116,7 +92,7 @@ class VectorDB:
                 metadata
             )])
             
-            logger.info(f"✅ Estudiante {codigo} guardado en Pinecone")
+            logger.info(f"Estudiante {codigo} guardado en Pinecone")
             return True
         
         except Exception as e:
@@ -129,17 +105,7 @@ class VectorDB:
         top_k: int = 5,
         threshold: float = 0.80
     ) -> List[Dict]:
-        """
-        Busca embeddings similares en Pinecone.
-        
-        Args:
-            embedding: Embedding a buscar (normalizado)
-            top_k: Número máximo de resultados
-            threshold: Similitud mínima (0-1)
-        
-        Returns:
-            Lista de diccionarios con código, nombre y confianza
-        """
+
         try:
             if not self.connected:
                 logger.error("Pinecone no está conectado")
@@ -175,15 +141,7 @@ class VectorDB:
             return []
 
     def eliminar_estudiante(self, codigo: str) -> bool:
-        """
-        Elimina todos los embeddings de un estudiante.
-        
-        Args:
-            codigo: Código único del estudiante
-        
-        Returns:
-            True si se eliminó
-        """
+
         try:
             if not self.connected:
                 logger.error("Pinecone no está conectado")
@@ -194,7 +152,7 @@ class VectorDB:
                 filter={"codigo": {"$eq": codigo}}
             )
             
-            logger.info(f"✅ Estudiante {codigo} eliminado de Pinecone")
+            logger.info(f"Estudiante {codigo} eliminado de Pinecone")
             return True
         
         except Exception as e:
@@ -208,32 +166,13 @@ class VectorDB:
         codigo: str,
         foto_url: Optional[str] = None
     ) -> bool:
-        """
-        Actualiza embedding de estudiante existente.
-        
-        Args:
-            embedding: Nuevo embedding
-            nombre: Nombre del estudiante
-            codigo: Código único
-            foto_url: Nueva URL de foto
-        
-        Returns:
-            True si se actualizó
-        """
+
         # Eliminar antiguo y crear nuevo
         self.eliminar_estudiante(codigo)
         return self.registrar_estudiante(embedding, nombre, codigo, foto_url)
 
     def obtener_estudiante(self, codigo: str) -> Optional[Dict]:
-        """
-        Obtiene metadatos de un estudiante por código.
-        
-        Args:
-            codigo: Código único del estudiante
-        
-        Returns:
-            Diccionario con metadatos o None
-        """
+
         try:
             if not self.connected:
                 logger.error("Pinecone no está conectado")
@@ -250,12 +189,7 @@ class VectorDB:
             return None
 
     def get_stats(self) -> Optional[Dict]:
-        """
-        Obtiene estadísticas del índice.
-        
-        Returns:
-            Diccionario con estadísticas
-        """
+
         try:
             if not self.connected:
                 return None
@@ -273,10 +207,10 @@ class VectorDB:
 try:
     if settings.USE_PINECONE and settings.PINECONE_API_KEY:
         vector_db = VectorDB()
-        logger.info("🟢 VectorDB (Pinecone) instancia global creada")
+        logger.info("VectorDB (Pinecone) instancia global creada")
     else:
-        logger.warning("⚠️ Pinecone deshabilitado o sin API key")
+        logger.warning("Pinecone deshabilitado o sin API key")
         vector_db = None
 except Exception as e:
-    logger.critical(f"🔴 Error crítico al crear VectorDB: {e}")
+    logger.critical(f"Error crítico al crear VectorDB: {e}")
     vector_db = None
