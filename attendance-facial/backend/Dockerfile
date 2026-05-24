@@ -4,11 +4,11 @@ WORKDIR /app
 
 # Dependencias del sistema para OpenCV e InsightFace
 RUN apt-get update && apt-get install -y \
-    libgl1-mesa-glx \
+    libgl1 \
     libglib2.0-0 \
     libsm6 \
     libxext6 \
-    libxrender-dev \
+    libxrender1 \
     libgomp1 \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
@@ -33,4 +33,4 @@ RUN mkdir -p data
 
 EXPOSE 8000
 
-CMD uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}
+CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}"]
