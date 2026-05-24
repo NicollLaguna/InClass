@@ -41,5 +41,10 @@ async def root():
     return {
         "app": settings.APP_NAME,
         "version": settings.APP_VERSION,
-        "status": "🟢 En línea"
+        "status": "online"
     }
+
+
+if __name__ == "__main__":
+    import uvicorn, os
+    uvicorn.run("main:app", host="0.0.0.0", port=int(os.getenv("PORT", 8000)))
