@@ -162,4 +162,13 @@ class FaceRecognizer:
             print(f"[recognizer] Error cargando desde Supabase: {e}")
 
 
-recognizer = FaceRecognizer()
+_instance: FaceRecognizer = None
+
+def get_recognizer() -> FaceRecognizer:
+    global _instance
+    if _instance is None:
+        _instance = FaceRecognizer()
+    return _instance
+
+def preload():
+    get_recognizer()

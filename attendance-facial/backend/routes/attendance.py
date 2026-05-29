@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from database import supabase
 from routes.auth import require_estudiante
-from face_engine.recognizer import recognizer
+from face_engine.recognizer import get_recognizer
 from services.email_service import send_estudiante_asistencia
 from datetime import datetime, timedelta, timezone
 import cv2
@@ -64,10 +64,7 @@ async def recognize_from_frame(sesion_id: str, payload: dict, user=Depends(requi
         raise HTTPException(status_code=400, detail="Frame inválido.")
 
     # Reconocimiento facial
-    results = recognizer.recognize_face(frame)
-
-    if not results:
-        raise HTTPException(status_code=422, detail="No se detectó ningún rostro.")
+    results = get_recognizer().recognize_face(frame)
 
     # Busca el estudiante autenticado entre los reconocidos
     estudiante_info = supabase.table("estudiantes").select("*").eq(
@@ -86,17 +83,22 @@ async def recognize_from_frame(sesion_id: str, payload: dict, user=Depends(requi
             break
 
     if not reconocido:
-        # Log intento fallido
+        score, face_detected = get_recognizer().get_best_match_for(frame, est["codigo"])
+        porcentaje = int(score * 100)
+
+        if not face_detected:
+            motivo = "No se detectó ningún rostro en la imagen."
+        else:
+            motivo = f"El rostro no coincide con {est['nombre']}. Confianza: {porcentaje}% (mínimo requerido: {int(settings.MIN_CONFIDENCE * 100)}%)"
+
         supabase.table("intentos_reconocimiento").insert({
             "sesion_id": sesion_id,
             "exitoso": False,
-            "confianza": results[0].get("confianza") if results else None,
-            "motivo_fallo": "Confianza menor al 90% o rostro no coincide con estudiante autenticado"
+            "confianza": score if face_detected else None,
+            "motivo_fallo": motivo
         }).execute()
-        raise HTTPException(
-            status_code=422,
-            detail=f"Rostro no reconocido con suficiente confianza. Confianza obtenida: {int((results[0].get('confianza') or 0) * 100)}%"
-        )
+
+        raise HTTPException(status_code=422, detail=motivo)
 
     hora = ahora.strftime("%H:%M:%S")
     fecha = ahora.strftime("%Y-%m-%d")
