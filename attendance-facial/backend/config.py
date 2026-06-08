@@ -21,11 +21,14 @@ class Settings:
     # ── JWT (Autenticación) ───────────────────────────────
     JWT_SECRET: str = os.getenv("JWT_SECRET", "inclass_secret_key_2024")
     JWT_ALGORITHM: str = "HS256"
-    JWT_EXPIRATION_HOURS: int = 24
+    JWT_EXPIRATION_HOURS: int = 720  # 30 días
 
-    # ── Email (Resend) ────────────────────────────────────
-    RESEND_API_KEY: str = os.getenv("RESEND_API_KEY", "")
-    EMAIL_FROM: str = os.getenv("EMAIL_FROM", "InClass <onboarding@resend.dev>")
+    # ── Email (Gmail SMTP) ────────────────────────────────
+    SMTP_HOST: str     = os.getenv("SMTP_HOST", "smtp.gmail.com")
+    SMTP_PORT: int     = int(os.getenv("SMTP_PORT", "587"))
+    SMTP_USER: str     = os.getenv("SMTP_USER", "")
+    SMTP_PASSWORD: str = os.getenv("SMTP_PASSWORD", "")
+    EMAIL_FROM: str    = os.getenv("EMAIL_FROM", "")
 
     # ── Rutas locales ─────────────────────────────────────
     FACES_DIR: str = "data/faces"
@@ -34,7 +37,7 @@ class Settings:
 
     # ── Reconocimiento facial (Buffalo_l) ─────────────────
     TOLERANCE: float = 0.4
-    MIN_CONFIDENCE: float = 0.80
+    MIN_CONFIDENCE: float = float(os.getenv("MIN_CONFIDENCE", "0.45"))
     PHOTOS_PER_STUDENT: int = 5
     FACE_QUALITY_THRESHOLD: float = 0.9  # Nuevo: umbral de calidad de detección
 
