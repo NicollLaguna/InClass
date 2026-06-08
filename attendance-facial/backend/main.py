@@ -8,8 +8,6 @@ from routes.enrollments import router as enrollments_router
 from routes.sessions import router as sessions_router
 from routes.students import router as students_router
 from services.notification_service import init_firebase
-from face_engine.recognizer import preload as preload_recognizer
-import threading
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -29,7 +27,6 @@ app.add_middleware(
 @app.on_event("startup")
 async def startup_event():
     init_firebase()
-    threading.Thread(target=preload_recognizer, daemon=True).start()
 
 app.include_router(auth_router)
 app.include_router(courses_router)
