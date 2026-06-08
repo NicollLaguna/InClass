@@ -174,7 +174,7 @@ class _SessionScreenState extends State<SessionScreen> {
                 children: [
                   Text(widget.curso['nombre'] ?? '',
                       style: GoogleFonts.poppins(
-                        color: Colors.white,
+                        color: AppTheme.surface,
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
                       )),
@@ -188,13 +188,13 @@ class _SessionScreenState extends State<SessionScreen> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 12, vertical: 4),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
                       'Código: ${widget.curso['codigo_acceso']}',
                       style: GoogleFonts.poppins(
-                          color: Colors.white,
+                          color: AppTheme.surface,
                           fontSize: 12,
                           fontWeight: FontWeight.w600),
                     ),
@@ -211,7 +211,7 @@ class _SessionScreenState extends State<SessionScreen> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: AppTheme.success.withOpacity(0.1),
+                  color: AppTheme.success.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: AppTheme.success),
                 ),
@@ -249,7 +249,7 @@ class _SessionScreenState extends State<SessionScreen> {
                       child: Text(
                         '⏱ $_minutosRestantes min',
                         style: GoogleFonts.poppins(
-                            color: Colors.white,
+                            color: AppTheme.surface,
                             fontSize: 12,
                             fontWeight: FontWeight.w600),
                       ),
@@ -320,7 +320,7 @@ class _SessionScreenState extends State<SessionScreen> {
               width: double.infinity,
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppTheme.surface,
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Column(

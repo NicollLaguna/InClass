@@ -19,7 +19,7 @@ class DocenteHomeScreen extends StatefulWidget {
 
 class _DocenteHomeScreenState extends State<DocenteHomeScreen> {
   String _nombre = '';
-  String _email = '';
+  String _email  = '';
 
   @override
   void initState() {
@@ -31,7 +31,7 @@ class _DocenteHomeScreenState extends State<DocenteHomeScreen> {
     final data = await ApiService.getSessionData();
     setState(() {
       _nombre = data['nombre'] ?? '';
-      _email = data['email'] ?? '';
+      _email  = data['email']  ?? '';
     });
   }
 
@@ -46,126 +46,146 @@ class _DocenteHomeScreenState extends State<DocenteHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final firstName = _nombre.isNotEmpty ? _nombre.split(' ')[0] : 'Docente';
     return Scaffold(
-      backgroundColor: AppTheme.background,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Gap(8),
-              // Header
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: AppTheme.primary,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: const Icon(Icons.school,
-                        color: Colors.white, size: 28),
-                  ),
-                  const Gap(12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Hola, ${_nombre.split(' ')[0]}',
-                            style: GoogleFonts.poppins(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
-                              color: AppTheme.primary,
-                            )),
-                        Text('Panel Docente',
-                            style: GoogleFonts.poppins(
-                              fontSize: 12,
-                              color: AppTheme.textSecondary,
-                            )),
-                      ],
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: _logout,
-                    icon: const Icon(Icons.logout_rounded),
-                    color: AppTheme.textSecondary,
-                  ),
-                ],
-              ).animate().fadeIn(duration: 600.ms).slideX(begin: -0.2),
+      body: Container(
+        decoration: const BoxDecoration(gradient: AppTheme.splashGradient),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Gap(20),
 
-              const Gap(8),
-              Text(_email,
-                  style: GoogleFonts.poppins(
-                    fontSize: 12,
-                    color: AppTheme.textSecondary,
-                  )).animate().fadeIn(delay: 200.ms),
-
-              const Gap(32),
-
-              Text('¿Qué deseas hacer?',
-                  style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: AppTheme.textPrimary,
-                  )).animate().fadeIn(delay: 300.ms),
-
-              const Gap(16),
-
-            Expanded(
-                child: GridView.count(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
+                // Header
+                Row(
                   children: [
-                    _MenuCard(
-                      icon: Icons.book_rounded,
-                      title: 'Mis\nCursos',
-                      subtitle: 'Gestionar cursos',
-                      color: AppTheme.secondary,
-                      delay: 400,
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => const CoursesScreen()),
+                    Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        gradient: AppTheme.primaryGradient,
+                        borderRadius: BorderRadius.circular(14),
+                        boxShadow: AppTheme.glowBlue,
+                      ),
+                      child: const Icon(Icons.school_rounded,
+                          color: Colors.white, size: 24),
+                    ),
+                    const Gap(12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Hola, $firstName',
+                              style: GoogleFonts.poppins(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700,
+                                color: AppTheme.textPrimary,
+                              )),
+                          Text('Panel Docente',
+                              style: GoogleFonts.poppins(
+                                fontSize: 12,
+                                color: AppTheme.secondary,
+                              )),
+                        ],
                       ),
                     ),
-                    _MenuCard(
-                      icon: Icons.people_rounded,
-                      title: 'Solicitudes\nPendientes',
-                      subtitle: 'Aprobar matrículas',
-                      color: AppTheme.warning,
-                      delay: 500,
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => const PendingEnrollmentsScreen()),
-                      ),
-                    ),
-                    _MenuCard(
-                      icon: Icons.play_circle_rounded,
-                      title: 'Iniciar\nSesión',
-                      subtitle: 'Habilitar asistencia',
-                      color: AppTheme.success,
-                      delay: 600,
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => const SelectCourseSessionScreen()),
-                      ),
-                    ),
-                    _MenuCard(
-                      icon: Icons.bar_chart_rounded,
-                      title: 'Reportes',
-                      subtitle: 'Ver y descargar',
-                      color: AppTheme.accent,
-                      delay: 700,
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => const ReportsDocenteScreen()),
-                      ),
+                    IconButton(
+                      onPressed: _logout,
+                      icon: const Icon(Icons.logout_rounded,
+                          color: AppTheme.textSecondary, size: 22),
                     ),
                   ],
+                ).animate().fadeIn(duration: 500.ms).slideX(begin: -0.1),
+
+                const Gap(4),
+                Padding(
+                  padding: const EdgeInsets.only(left: 60),
+                  child: Text(_email,
+                      style: GoogleFonts.poppins(
+                          fontSize: 11, color: AppTheme.textSecondary)),
+                ).animate().fadeIn(delay: 150.ms),
+
+                const Gap(28),
+
+                // Stats banner
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: AppTheme.glowCardDecoration,
+                  child: Row(
+                    children: [
+                      const Icon(Icons.verified_user_rounded,
+                          color: AppTheme.secondary, size: 20),
+                      const Gap(10),
+                      Text('Sistema de Asistencia con IA activo',
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            color: AppTheme.textPrimary,
+                            fontWeight: FontWeight.w500,
+                          )),
+                    ],
+                  ),
+                ).animate().fadeIn(delay: 200.ms),
+
+                const Gap(24),
+
+                Text('¿Qué deseas hacer?',
+                    style: GoogleFonts.poppins(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: AppTheme.textSecondary,
+                    )).animate().fadeIn(delay: 250.ms),
+
+                const Gap(14),
+
+                Expanded(
+                  child: GridView.count(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 14,
+                    mainAxisSpacing: 14,
+                    children: [
+                      _MenuCard(
+                        icon: Icons.book_rounded,
+                        title: 'Mis Cursos',
+                        subtitle: 'Gestionar cursos',
+                        color: AppTheme.primary,
+                        delay: 300,
+                        onTap: () => Navigator.push(context,
+                            MaterialPageRoute(builder: (_) => const CoursesScreen())),
+                      ),
+                      _MenuCard(
+                        icon: Icons.people_rounded,
+                        title: 'Solicitudes',
+                        subtitle: 'Aprobar matrículas',
+                        color: AppTheme.warning,
+                        delay: 380,
+                        onTap: () => Navigator.push(context,
+                            MaterialPageRoute(builder: (_) => const PendingEnrollmentsScreen())),
+                      ),
+                      _MenuCard(
+                        icon: Icons.play_circle_rounded,
+                        title: 'Iniciar Sesión',
+                        subtitle: 'Habilitar asistencia',
+                        color: AppTheme.success,
+                        delay: 460,
+                        onTap: () => Navigator.push(context,
+                            MaterialPageRoute(builder: (_) => const SelectCourseSessionScreen())),
+                      ),
+                      _MenuCard(
+                        icon: Icons.bar_chart_rounded,
+                        title: 'Reportes',
+                        subtitle: 'Ver y descargar',
+                        color: AppTheme.secondary,
+                        delay: 540,
+                        onTap: () => Navigator.push(context,
+                            MaterialPageRoute(builder: (_) => const ReportsDocenteScreen())),
+                      ),
+                    ],
+                  ),
                 ),
-              ),  
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -196,47 +216,45 @@ class _MenuCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          gradient: AppTheme.cardGradient,
           borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: color.withValues(alpha:0.3), width: 1),
           boxShadow: [
             BoxShadow(
-              color: color.withOpacity(0.15),
+              color: color.withValues(alpha:0.12),
               blurRadius: 16,
               offset: const Offset(0, 4),
             ),
           ],
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: color.withOpacity(0.12),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(icon, color: color, size: 28),
+        padding: const EdgeInsets.all(18),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha:0.15),
+                borderRadius: BorderRadius.circular(12),
               ),
-              const Spacer(),
-              Text(title,
-                  style: GoogleFonts.poppins(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                    color: AppTheme.textPrimary,
-                    height: 1.2,
-                  )),
-              const Gap(4),
-              Text(subtitle,
-                  style: GoogleFonts.poppins(
-                    fontSize: 11,
-                    color: AppTheme.textSecondary,
-                  )),
-            ],
-          ),
+              child: Icon(icon, color: color, size: 26),
+            ),
+            const Spacer(),
+            Text(title,
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  color: AppTheme.textPrimary,
+                )),
+            const Gap(3),
+            Text(subtitle,
+                style: GoogleFonts.poppins(
+                  fontSize: 11,
+                  color: AppTheme.textSecondary,
+                )),
+          ],
         ),
       ),
-    ).animate().fadeIn(delay: Duration(milliseconds: delay)).slideY(begin: 0.2);
+    ).animate().fadeIn(delay: Duration(milliseconds: delay)).slideY(begin: 0.15);
   }
 }

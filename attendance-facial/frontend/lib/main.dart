@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'theme/app_theme.dart';
 import 'screens/login_screen.dart';
 import 'screens/docente/docente_home_screen.dart';
@@ -118,7 +119,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 style: const TextStyle(fontSize: 12, color: Colors.white70)),
           ],
         ),
-        backgroundColor: const Color(0xFF1F3864),
+        backgroundColor: AppTheme.surface,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         margin: const EdgeInsets.all(16),
@@ -130,44 +131,89 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _checkSession() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
-    final role = prefs.getString('role');
-    if (!mounted) return;
+    final role  = prefs.getString('role');
+    final email = prefs.getString('email');
+
     if (token != null && role != null) {
-      if (role == 'docente') {
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (_) => const DocenteHomeScreen()));
-      } else {
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (_) => const EstudianteHomeScreen()));
+      final valid = await ApiService.validateToken();
+      if (!mounted) return;
+      if (valid) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => role == 'docente'
+                ? const DocenteHomeScreen()
+                : const EstudianteHomeScreen(),
+          ),
+        );
+        return;
       }
-    } else {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (_) => const LoginScreen()));
+      await ApiService.clearSession();
     }
+
+    if (!mounted) return;
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) => LoginScreen(prefillEmail: email),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1F3864),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.school, color: Colors.white, size: 80),
-            const SizedBox(height: 16),
-            const Text('InClass',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 36,
-                  fontWeight: FontWeight.w700,
-                )),
-            const SizedBox(height: 8),
-            const Text('Control de Asistencia Facial',
-                style: TextStyle(color: Colors.white70, fontSize: 14)),
-            const SizedBox(height: 40),
-            const CircularProgressIndicator(color: Colors.white),
-          ],
+      body: Container(
+        decoration: const BoxDecoration(gradient: AppTheme.splashGradient),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  boxShadow: AppTheme.glowBlue,
+                ),
+                child: ClipOval(
+                  child: Image.asset(
+                    'assets/icon/app_icon.png',
+                    fit: BoxFit.cover,
+                    errorBuilder: (ctx, err, st) => Container(
+                      decoration: const BoxDecoration(
+                        gradient: AppTheme.primaryGradient,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.face_retouching_natural,
+                          color: Colors.white, size: 52),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+              Text('InClass',
+                  style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontSize: 36,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: -0.5,
+                  )),
+              const SizedBox(height: 6),
+              Text('Reconocimiento Facial con IA',
+                  style: GoogleFonts.poppins(
+                      color: AppTheme.textSecondary, fontSize: 14)),
+              const SizedBox(height: 48),
+              SizedBox(
+                width: 28,
+                height: 28,
+                child: CircularProgressIndicator(
+                  color: AppTheme.primary,
+                  strokeWidth: 2.5,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

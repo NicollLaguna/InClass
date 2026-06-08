@@ -167,11 +167,11 @@ class _ReportsDocenteScreenState extends State<ReportsDocenteScreen> {
                             margin: const EdgeInsets.only(bottom: 10),
                             padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: AppTheme.surface,
                               borderRadius: BorderRadius.circular(14),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.04),
+                                  color: Colors.black.withValues(alpha: 0.04),
                                   blurRadius: 6,
                                 ),
                               ],
@@ -182,8 +182,8 @@ class _ReportsDocenteScreenState extends State<ReportsDocenteScreen> {
                                   padding: const EdgeInsets.all(10),
                                   decoration: BoxDecoration(
                                     color: activa
-                                        ? AppTheme.success.withOpacity(0.1)
-                                        : AppTheme.secondary.withOpacity(0.1),
+                                        ? AppTheme.success.withValues(alpha: 0.1)
+                                        : AppTheme.secondary.withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: Icon(
@@ -243,7 +243,7 @@ class _ReportsDocenteScreenState extends State<ReportsDocenteScreen> {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 8, vertical: 4),
                                     decoration: BoxDecoration(
-                                      color: Colors.orange.withOpacity(0.1),
+                                      color: Colors.orange.withValues(alpha: 0.1),
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Text('En curso',

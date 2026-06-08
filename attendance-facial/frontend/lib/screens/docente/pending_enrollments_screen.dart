@@ -149,16 +149,16 @@ class _PendingEnrollmentsScreenState extends State<PendingEnrollmentsScreen> {
                             margin: const EdgeInsets.only(bottom: 10),
                             padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: AppTheme.surface,
                               borderRadius: BorderRadius.circular(14),
                               border: Border.all(
-                                  color: Colors.orange.withOpacity(0.3)),
+                                  color: Colors.orange.withValues(alpha: 0.3)),
                             ),
                             child: Row(
                               children: [
                                 CircleAvatar(
                                   backgroundColor:
-                                      Colors.orange.withOpacity(0.1),
+                                      Colors.orange.withValues(alpha: 0.1),
                                   child: Text(
                                     (est['nombre'] as String)[0].toUpperCase(),
                                     style:

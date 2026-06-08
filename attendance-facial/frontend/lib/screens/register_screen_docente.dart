@@ -74,7 +74,7 @@ class _RegisterScreenDocenteState extends State<RegisterScreenDocente> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.orange.withOpacity(0.1),
+                color: Colors.orange.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(color: Colors.orange),
               ),
@@ -140,7 +140,7 @@ class _RegisterScreenDocenteState extends State<RegisterScreenDocente> {
               child: Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: AppTheme.primary.withOpacity(0.1),
+                  color: AppTheme.primary.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(Icons.school, color: AppTheme.primary, size: 48),
@@ -224,7 +224,7 @@ class _RegisterScreenDocenteState extends State<RegisterScreenDocente> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: AppTheme.error.withOpacity(0.1),
+                  color: AppTheme.error.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(color: AppTheme.error),
                 ),
@@ -238,7 +238,7 @@ class _RegisterScreenDocenteState extends State<RegisterScreenDocente> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: AppTheme.success.withOpacity(0.1),
+                  color: AppTheme.success.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(color: AppTheme.success),
                 ),

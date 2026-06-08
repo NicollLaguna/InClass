@@ -84,7 +84,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                                         color: Colors.white70, fontSize: 12)),
                                 Text('${_estudiantes.length}',
                                     style: GoogleFonts.poppins(
-                                      color: Colors.white,
+                                      color: AppTheme.surface,
                                       fontSize: 28,
                                       fontWeight: FontWeight.w700,
                                     )),
@@ -105,11 +105,11 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                             margin: const EdgeInsets.only(bottom: 10),
                             padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: AppTheme.surface,
                               borderRadius: BorderRadius.circular(14),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.04),
+                                  color: Colors.black.withValues(alpha: 0.04),
                                   blurRadius: 6,
                                 ),
                               ],
@@ -118,7 +118,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                               children: [
                                 CircleAvatar(
                                   backgroundColor:
-                                      AppTheme.secondary.withOpacity(0.1),
+                                      AppTheme.secondary.withValues(alpha: 0.1),
                                   child: Text(
                                     (e['nombre'] as String)[0].toUpperCase(),
                                     style: GoogleFonts.poppins(

@@ -86,7 +86,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                         color: Colors.white70, fontSize: 13)),
                                 Text('${_registros.length}',
                                     style: GoogleFonts.poppins(
-                                      color: Colors.white,
+                                      color: AppTheme.surface,
                                       fontSize: 32,
                                       fontWeight: FontWeight.w700,
                                     )),
@@ -108,11 +108,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
                           return Container(
                             margin: const EdgeInsets.only(bottom: 12),
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: AppTheme.surface,
                               borderRadius: BorderRadius.circular(16),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.05),
+                                  color: Colors.black.withValues(alpha: 0.05),
                                   blurRadius: 8,
                                   offset: const Offset(0, 2),
                                 ),
@@ -123,7 +123,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                   horizontal: 16, vertical: 8),
                               leading: CircleAvatar(
                                 backgroundColor:
-                                    AppTheme.success.withOpacity(0.1),
+                                    AppTheme.success.withValues(alpha: 0.1),
                                 child: const Icon(Icons.check,
                                     color: AppTheme.success),
                               ),
