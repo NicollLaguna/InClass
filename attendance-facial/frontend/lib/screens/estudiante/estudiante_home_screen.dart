@@ -58,19 +58,30 @@ class _EstudianteHomeScreenState extends State<EstudianteHomeScreen> {
               children: [
                 const Gap(20),
 
-                // Header
+                // Header con ícono real de la app
                 Row(
                   children: [
                     Container(
                       width: 48,
                       height: 48,
                       decoration: BoxDecoration(
-                        gradient: AppTheme.primaryGradient,
                         borderRadius: BorderRadius.circular(14),
                         boxShadow: AppTheme.glowBlue,
                       ),
-                      child: const Icon(Icons.person_rounded,
-                          color: Colors.white, size: 24),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(14),
+                        child: Image.asset(
+                          'assets/icon/app_icon.png',
+                          fit: BoxFit.cover,
+                          errorBuilder: (ctx, err, st) => Container(
+                            decoration: const BoxDecoration(
+                              gradient: AppTheme.primaryGradient,
+                            ),
+                            child: const Icon(Icons.person_rounded,
+                                color: Colors.white, size: 24),
+                          ),
+                        ),
+                      ),
                     ),
                     const Gap(12),
                     Expanded(
@@ -109,33 +120,12 @@ class _EstudianteHomeScreenState extends State<EstudianteHomeScreen> {
 
                 const Gap(28),
 
-                // AI banner
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: AppTheme.glowCardDecoration,
-                  child: Row(
-                    children: [
-                      const Icon(Icons.face_retouching_natural,
-                          color: AppTheme.secondary, size: 20),
-                      const Gap(10),
-                      Text('Asistencia por reconocimiento facial',
-                          style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            color: AppTheme.textPrimary,
-                            fontWeight: FontWeight.w500,
-                          )),
-                    ],
-                  ),
-                ).animate().fadeIn(delay: 200.ms),
-
-                const Gap(24),
-
                 Text('¿Qué deseas hacer?',
                     style: GoogleFonts.poppins(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
                       color: AppTheme.textSecondary,
-                    )).animate().fadeIn(delay: 250.ms),
+                    )).animate().fadeIn(delay: 200.ms),
 
                 const Gap(14),
 
@@ -147,37 +137,41 @@ class _EstudianteHomeScreenState extends State<EstudianteHomeScreen> {
                     children: [
                       _MenuCard(
                         icon: Icons.book_rounded,
+                        imagePath: 'assets/icons/ic_cursos.png',
                         title: 'Mis Cursos',
                         subtitle: 'Ver mis materias',
                         color: AppTheme.secondary,
-                        delay: 300,
+                        delay: 250,
                         onTap: () => Navigator.push(context,
                             MaterialPageRoute(builder: (_) => MyCoursesScreen())),
                       ),
                       _MenuCard(
                         icon: Icons.add_circle_rounded,
+                        imagePath: 'assets/icons/ic_unirse.png',
                         title: 'Unirse a Curso',
                         subtitle: 'Ingresar código',
                         color: AppTheme.primary,
-                        delay: 380,
+                        delay: 330,
                         onTap: () => Navigator.push(context,
                             MaterialPageRoute(builder: (_) => const JoinCourseScreen())),
                       ),
                       _MenuCard(
                         icon: Icons.face_retouching_natural,
+                        imagePath: 'assets/icons/ic_asistencia.png',
                         title: 'Registrar Asistencia',
                         subtitle: 'Sesión activa',
                         color: AppTheme.success,
-                        delay: 460,
+                        delay: 410,
                         onTap: () => Navigator.push(context,
                             MaterialPageRoute(builder: (_) => const AttendanceScreen())),
                       ),
                       _MenuCard(
                         icon: Icons.history_rounded,
+                        imagePath: 'assets/icons/ic_historial.png',
                         title: 'Mi Historial',
                         subtitle: 'Ver asistencias',
                         color: AppTheme.warning,
-                        delay: 540,
+                        delay: 490,
                         onTap: () => Navigator.push(context,
                             MaterialPageRoute(builder: (_) => const HistoryScreen())),
                       ),
@@ -195,6 +189,7 @@ class _EstudianteHomeScreenState extends State<EstudianteHomeScreen> {
 
 class _MenuCard extends StatelessWidget {
   final IconData icon;
+  final String? imagePath;
   final String title;
   final String subtitle;
   final Color color;
@@ -203,6 +198,7 @@ class _MenuCard extends StatelessWidget {
 
   const _MenuCard({
     required this.icon,
+    this.imagePath,
     required this.title,
     required this.subtitle,
     required this.color,
@@ -232,12 +228,30 @@ class _MenuCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(icon, color: color, size: 26),
+              width: 52,
+              height: 52,
+              padding: imagePath != null ? EdgeInsets.zero : const EdgeInsets.all(10),
+              decoration: imagePath != null
+                  ? null
+                  : BoxDecoration(
+                      color: color.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+              child: imagePath != null
+                  ? Image.asset(
+                      imagePath!,
+                      width: 52,
+                      height: 52,
+                      errorBuilder: (ctx, err, st) => Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: color.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Icon(icon, color: color, size: 26),
+                      ),
+                    )
+                  : Icon(icon, color: color, size: 26),
             ),
             const Spacer(),
             Text(title,
