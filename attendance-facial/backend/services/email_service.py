@@ -8,24 +8,30 @@ from config import settings
 def _smtp_send(to: str, subject: str, html: str):
     """Envío real via SMTP — se ejecuta en un hilo para no bloquear FastAPI."""
     if not settings.SMTP_USER or not settings.SMTP_PASSWORD:
-        print("[email] SMTP_USER o SMTP_PASSWORD no configurados en .env")
+        print("[email] SMTP_USER o SMTP_PASSWORD no configurados — email omitido")
+        print(f"[email] SMTP_USER={repr(settings.SMTP_USER)} SMTP_HOST={settings.SMTP_HOST}:{settings.SMTP_PORT}")
         return
     try:
+        print(f"[email] Conectando a {settings.SMTP_HOST}:{settings.SMTP_PORT} como {settings.SMTP_USER}")
         msg = MIMEMultipart("alternative")
         msg["Subject"] = subject
         msg["From"]    = settings.EMAIL_FROM or settings.SMTP_USER
         msg["To"]      = to
         msg.attach(MIMEText(html, "html", "utf-8"))
 
-        with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT, timeout=10) as server:
+        with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT, timeout=30) as server:
             server.ehlo()
             server.starttls()
             server.ehlo()
             server.login(settings.SMTP_USER, settings.SMTP_PASSWORD)
             server.sendmail(settings.SMTP_USER, to, msg.as_string())
-        print(f"[email] Enviado a {to}: {subject}")
+        print(f"[email] ✓ Enviado a {to}: {subject}")
+    except smtplib.SMTPAuthenticationError:
+        print("[email] ✗ Error de autenticación — verifica SMTP_USER y SMTP_PASSWORD (usa App Password de Google, no la contraseña normal)")
+    except smtplib.SMTPException as e:
+        print(f"[email] ✗ Error SMTP: {e}")
     except Exception as e:
-        print(f"[email] Error enviando a {to}: {e}")
+        print(f"[email] ✗ Error inesperado: {type(e).__name__}: {e}")
 
 
 def _send(to: str, subject: str, html: str):

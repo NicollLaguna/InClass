@@ -24,12 +24,28 @@ class _RegisterScreenDocenteState extends State<RegisterScreenDocente> {
   String? _error;
   String? _success;
 
+  String? _checkPassword(String pw) {
+    if (pw.length < 8) { return 'Mínimo 8 caracteres.'; }
+    if (!pw.contains(RegExp(r'[A-Z]'))) { return 'Debe incluir al menos una mayúscula.'; }
+    if (!pw.contains(RegExp(r'[a-z]'))) { return 'Debe incluir al menos una minúscula.'; }
+    if (!pw.contains(RegExp(r'[0-9]'))) { return 'Debe incluir al menos un número.'; }
+    if (!pw.contains(RegExp(r'[!@#\$%^&*(),.?":{}|<>]'))) {
+      return 'Debe incluir al menos un símbolo (!@#\$%...).';
+    }
+    return null;
+  }
+
   void _showConfirmDialog() {
     if (_nombreController.text.isEmpty ||
         _emailController.text.isEmpty ||
         _passwordController.text.isEmpty ||
         _confirmController.text.isEmpty) {
       setState(() => _error = 'Completa todos los campos.');
+      return;
+    }
+    final pwError = _checkPassword(_passwordController.text);
+    if (pwError != null) {
+      setState(() => _error = pwError);
       return;
     }
     if (_passwordController.text != _confirmController.text) {

@@ -32,6 +32,7 @@ class _RegisterScreenEstudianteState extends State<RegisterScreenEstudiante> {
   bool _obscurePassword = true;
   bool _obscureConfirm  = true;
   String? _error;
+  String _loadingMsg    = '';
 
   // ── Cámara ─────────────────────────────────────────────
   CameraController? _cameraController;
@@ -114,6 +115,17 @@ class _RegisterScreenEstudianteState extends State<RegisterScreenEstudiante> {
 
   // ── Validación ─────────────────────────────────────────
 
+  String? _checkPassword(String pw) {
+    if (pw.length < 8)                             return 'Mínimo 8 caracteres.';
+    if (!pw.contains(RegExp(r'[A-Z]')))            return 'Debe incluir al menos una mayúscula.';
+    if (!pw.contains(RegExp(r'[a-z]')))            return 'Debe incluir al menos una minúscula.';
+    if (!pw.contains(RegExp(r'[0-9]')))            return 'Debe incluir al menos un número.';
+    if (!pw.contains(RegExp(r'[!@#\$%^&*(),.?":{}|<>]'))) {
+      return 'Debe incluir al menos un símbolo (!@#\$%...).';
+    }
+    return null;
+  }
+
   void _validarYConfirmar() {
     if (_nombreController.text.trim().isEmpty ||
         _codigoController.text.trim().isEmpty ||
@@ -126,6 +138,11 @@ class _RegisterScreenEstudianteState extends State<RegisterScreenEstudiante> {
     if (_codigoController.text.length != 12 ||
         !RegExp(r'^\d+$').hasMatch(_codigoController.text)) {
       setState(() => _error = 'El código debe tener exactamente 12 dígitos.');
+      return;
+    }
+    final pwError = _checkPassword(_passwordController.text);
+    if (pwError != null) {
+      setState(() => _error = pwError);
       return;
     }
     if (_passwordController.text != _confirmController.text) {
@@ -204,7 +221,7 @@ class _RegisterScreenEstudianteState extends State<RegisterScreenEstudiante> {
   // ── Registro ───────────────────────────────────────────
 
   Future<void> _register() async {
-    setState(() => _isLoading = true);
+    setState(() { _isLoading = true; _loadingMsg = 'Creando cuenta...'; });
     try {
       final authResult = await ApiService.registerEstudiante(
         nombre:   _nombreController.text.trim(),
@@ -217,6 +234,8 @@ class _RegisterScreenEstudianteState extends State<RegisterScreenEstudiante> {
         setState(() => _error = authResult['detail'] ?? 'Error al registrar.');
         return;
       }
+
+      setState(() => _loadingMsg = 'Procesando fotos faciales...\n(la primera vez puede tardar 1-2 min)');
 
       final fotoResult = await ApiService.registerStudent(
         nombre: _nombreController.text.trim(),
@@ -395,11 +414,22 @@ class _RegisterScreenEstudianteState extends State<RegisterScreenEstudiante> {
               child: ElevatedButton(
                 onPressed: _isLoading ? null : _validarYConfirmar,
                 child: _isLoading
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(
-                            color: Colors.white, strokeWidth: 2),
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const SizedBox(
+                            height: 18, width: 18,
+                            child: CircularProgressIndicator(
+                                color: Colors.white, strokeWidth: 2),
+                          ),
+                          const SizedBox(width: 12),
+                          Flexible(
+                            child: Text(_loadingMsg,
+                                style: GoogleFonts.poppins(
+                                    fontSize: 12, color: Colors.white),
+                                textAlign: TextAlign.center),
+                          ),
+                        ],
                       )
                     : Text('Registrarme',
                         style: GoogleFonts.poppins(fontSize: 16)),
