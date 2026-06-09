@@ -58,6 +58,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (widget.initialRole != null) _selectedRole = widget.initialRole!;
   }
 
+  void _onRoleChanged(String role) {
+    if (_selectedRole == role) return;
+    _cerrarCamara();
+    setState(() {
+      _selectedRole = role;
+      _fotos.clear();
+      _error = null;
+      _success = null;
+    });
+  }
+
   // ── Cámara ────────────────────────────────────────────────
 
   Future<void> _abrirCamara() async {
@@ -431,6 +442,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+
+            // ── Selector de rol (oculto cuando la cámara está activa) ──
+            if (!_cameraReady) ...[
+              Container(
+                decoration: BoxDecoration(
+                  color: AppTheme.surface,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: AppTheme.border),
+                ),
+                padding: const EdgeInsets.all(4),
+                child: Row(
+                  children: [
+                    _RoleBtn(
+                      label: 'Estudiante',
+                      icon: Icons.person_rounded,
+                      selected: _selectedRole == 'estudiante',
+                      onTap: () => _onRoleChanged('estudiante'),
+                    ),
+                    _RoleBtn(
+                      label: 'Docente',
+                      icon: Icons.school_rounded,
+                      selected: _selectedRole == 'docente',
+                      onTap: () => _onRoleChanged('docente'),
+                    ),
+                  ],
+                ),
+              ).animate().fadeIn(duration: 400.ms),
+              const Gap(24),
+            ],
 
             // ── Sección de fotos (solo estudiante) ──
             if (esEstudiante) ...[
@@ -830,6 +870,46 @@ class _RegisterScreenState extends State<RegisterScreen> {
 }
 
 // ── Widgets auxiliares ────────────────────────────────────────
+
+class _RoleBtn extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final bool selected;
+  final VoidCallback onTap;
+
+  const _RoleBtn({required this.label, required this.icon, required this.selected, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          decoration: BoxDecoration(
+            gradient: selected ? AppTheme.primaryGradient : null,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: selected ? AppTheme.glowBlue : [],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, color: selected ? Colors.white : AppTheme.textSecondary, size: 18),
+              const Gap(6),
+              Text(label,
+                  style: GoogleFonts.poppins(
+                    color: selected ? Colors.white : AppTheme.textSecondary,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
+                  )),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 class _Label extends StatelessWidget {
   final String text;

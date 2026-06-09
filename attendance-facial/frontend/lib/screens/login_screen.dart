@@ -283,7 +283,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           child: Text(
-                            'Regístrate como ${_selectedRole == 'docente' ? 'Docente' : 'Estudiante'}',
+                            'Regístrate',
                             style: GoogleFonts.poppins(
                               color: AppTheme.primary,
                               fontWeight: FontWeight.w600,
