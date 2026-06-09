@@ -32,6 +32,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool _isLoading       = false;
   bool _obscurePassword = true;
   bool _obscureConfirm  = true;
+  bool _termsAccepted   = false;
   String? _error;
   String? _success;
   String _loadingMsg    = '';
@@ -112,6 +113,121 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void _eliminarFoto(int index) => setState(() => _fotos.removeAt(index));
 
+  // ── Términos y Condiciones ────────────────────────────────
+
+  void _showTermsDialog() {
+    showDialog(
+      context: context,
+      builder: (_) => Dialog(
+        backgroundColor: AppTheme.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                gradient: AppTheme.primaryGradient,
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.shield_outlined, color: Colors.white, size: 22),
+                  const Gap(10),
+                  Expanded(
+                    child: Text('Términos y Política de Privacidad',
+                        style: GoogleFonts.poppins(
+                            color: Colors.white, fontWeight: FontWeight.w700, fontSize: 15)),
+                  ),
+                ],
+              ),
+            ),
+            Flexible(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _TermsSection(
+                      icon: Icons.face_retouching_natural,
+                      title: '1. Recopilación de Datos Biométricos',
+                      body:
+                          'Al registrarte como estudiante, InClass captura imágenes de tu rostro para crear un modelo facial único. Estos datos biométricos se procesan localmente en el servidor institucional y se almacenan de forma segura en la nube con cifrado de extremo a extremo.',
+                    ),
+                    _TermsSection(
+                      icon: Icons.track_changes_rounded,
+                      title: '2. Finalidad del Tratamiento',
+                      body:
+                          'Los datos biométricos y personales recopilados (nombre, código estudiantil, correo electrónico e imágenes faciales) se utilizan exclusivamente para el control automatizado de asistencia a clases. No se utilizarán para ningún otro propósito sin tu consentimiento explícito.',
+                    ),
+                    _TermsSection(
+                      icon: Icons.lock_outline,
+                      title: '3. Seguridad y Almacenamiento',
+                      body:
+                          'Tus datos se almacenan en servidores protegidos con encriptación AES-256. Las imágenes faciales se convierten en vectores matemáticos (embeddings de 512 dimensiones) y las fotos originales no se conservan en la base de datos. El acceso está restringido exclusivamente al personal autorizado.',
+                    ),
+                    _TermsSection(
+                      icon: Icons.share_outlined,
+                      title: '4. No Compartición con Terceros',
+                      body:
+                          'InClass no vende, alquila ni comparte tus datos personales o biométricos con terceros. La información únicamente puede ser consultada por el docente de tus cursos y los administradores del sistema institucional, con fines estrictamente académicos.',
+                    ),
+                    _TermsSection(
+                      icon: Icons.schedule_rounded,
+                      title: '5. Retención de Datos',
+                      body:
+                          'Tus datos se conservan durante el período académico activo. Una vez concluida tu relación con la institución, podrás solicitar la eliminación de tu información biométrica y personal escribiendo al administrador del sistema.',
+                    ),
+                    _TermsSection(
+                      icon: Icons.gavel_rounded,
+                      title: '6. Tus Derechos',
+                      body:
+                          'Tienes derecho a: (a) acceder a tus datos personales almacenados, (b) solicitar la corrección de datos inexactos, (c) solicitar la eliminación de tus datos, (d) oponerte al tratamiento en cualquier momento. Para ejercer estos derechos, contacta al administrador de la plataforma.',
+                    ),
+                    _TermsSection(
+                      icon: Icons.verified_user_outlined,
+                      title: '7. Consentimiento',
+                      body:
+                          'Al aceptar estos términos confirmas que tienes 18 años o más, o que cuentas con autorización de tu representante legal, y que consientes de manera libre, informada e inequívoca el tratamiento de tus datos biométricos y personales conforme a esta política.',
+                    ),
+                    const Gap(8),
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: AppTheme.primary.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: AppTheme.primary.withValues(alpha: 0.3)),
+                      ),
+                      child: Text(
+                        'Al registrarte, aceptas haber leído, entendido y estar de acuerdo con esta Política de Privacidad y Tratamiento de Datos Biométricos.',
+                        style: GoogleFonts.poppins(
+                            fontSize: 11, color: AppTheme.textSecondary, fontStyle: FontStyle.italic),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    setState(() => _termsAccepted = true);
+                    Navigator.pop(context);
+                  },
+                  child: Text('Entendido y Acepto', style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   // ── Validación ────────────────────────────────────────────
 
   String? _checkPassword(String pw) {
@@ -126,6 +242,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void _validarYConfirmar() {
+    if (!_termsAccepted) {
+      setState(() => _error = 'Debes aceptar los Términos y Condiciones para continuar.');
+      return;
+    }
+
     final esEstudiante = _selectedRole == 'estudiante';
 
     if (_nombreController.text.trim().isEmpty ||
@@ -462,6 +583,55 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
             const Gap(16),
 
+            // ── Checkbox términos ──
+            GestureDetector(
+              onTap: () => setState(() => _termsAccepted = !_termsAccepted),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    width: 22,
+                    height: 22,
+                    decoration: BoxDecoration(
+                      color: _termsAccepted ? AppTheme.primary : Colors.transparent,
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(
+                        color: _termsAccepted ? AppTheme.primary : AppTheme.textSecondary,
+                        width: 1.5,
+                      ),
+                    ),
+                    child: _termsAccepted
+                        ? const Icon(Icons.check, color: Colors.white, size: 14)
+                        : null,
+                  ),
+                  const Gap(10),
+                  Expanded(
+                    child: Wrap(
+                      children: [
+                        Text('He leído y acepto los ',
+                            style: GoogleFonts.poppins(fontSize: 12, color: AppTheme.textSecondary)),
+                        GestureDetector(
+                          onTap: _showTermsDialog,
+                          child: Text('Términos y Política de Privacidad',
+                              style: GoogleFonts.poppins(
+                                  fontSize: 12,
+                                  color: AppTheme.primary,
+                                  fontWeight: FontWeight.w600,
+                                  decoration: TextDecoration.underline,
+                                  decorationColor: AppTheme.primary)),
+                        ),
+                        Text(' (incluye datos biométricos)',
+                            style: GoogleFonts.poppins(fontSize: 12, color: AppTheme.textSecondary)),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ).animate().fadeIn(delay: 350.ms),
+
+            const Gap(16),
+
             // ── Botón ──
             SizedBox(
               width: double.infinity,
@@ -777,4 +947,41 @@ class _InfoRow extends StatelessWidget {
       Expanded(child: Text(value, style: GoogleFonts.poppins(fontSize: 13))),
     ],
   );
+}
+
+class _TermsSection extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String body;
+  const _TermsSection({required this.icon, required this.title, required this.body});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(icon, color: AppTheme.primary, size: 18),
+              const Gap(8),
+              Expanded(
+                child: Text(title,
+                    style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 13,
+                        color: AppTheme.textPrimary)),
+              ),
+            ],
+          ),
+          const Gap(6),
+          Text(body,
+              style: GoogleFonts.poppins(
+                  fontSize: 12, color: AppTheme.textSecondary, height: 1.5)),
+        ],
+      ),
+    );
+  }
 }
