@@ -99,8 +99,14 @@ class _LoginScreenState extends State<LoginScreen> {
         child: SafeArea(
           child: SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: hPad),
-            child: Column(
-              children: [
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: MediaQuery.of(context).size.height
+                    - MediaQuery.of(context).padding.top
+                    - MediaQuery.of(context).padding.bottom,
+              ),
+              child: Column(
+                children: [
                 Gap(isSmall ? 28 : 48),
 
                 // Logo
@@ -302,7 +308,8 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       ),
-    );
+    ),
+  );
   }
 
   @override
