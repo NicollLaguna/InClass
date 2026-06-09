@@ -10,8 +10,12 @@ from database import supabase
 class FaceRecognizer:
 
     def __init__(self):
-        self.app = FaceAnalysis(name='buffalo_l', providers=['CPUExecutionProvider'])
-        self.app.prepare(ctx_id=-1)
+        self.app = FaceAnalysis(
+            name='buffalo_s',
+            providers=['CPUExecutionProvider'],
+            allowed_modules=['detection', 'recognition'],
+        )
+        self.app.prepare(ctx_id=-1, det_size=(320, 320))
 
         self.embedding_db = []
         self.db_path = settings.EMBEDDINGS_DB_PATH
