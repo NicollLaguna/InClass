@@ -1,4 +1,3 @@
-import threading
 import httpx
 from config import settings
 
@@ -27,8 +26,8 @@ def _resend_send(to: str, subject: str, html: str):
 
 
 def _send(to: str, subject: str, html: str):
-    """Lanza el envío en un hilo para no bloquear las rutas async."""
-    threading.Thread(target=_resend_send, args=(to, subject, html), daemon=True).start()
+    """Envío sincrónico — Resend responde en <500ms, no necesita hilo."""
+    _resend_send(to, subject, html)
 
 
 def _base_template(content: str) -> str:
