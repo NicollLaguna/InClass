@@ -435,229 +435,231 @@ class _RegisterScreenState extends State<RegisterScreen> {
         foregroundColor: AppTheme.textPrimary,
         elevation: 0,
       ),
-      body: SingleChildScrollView(
-        controller: _scrollController,
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+      body: Stack(
+        children: [
+          // ── Formulario principal (nunca cambia de tamaño) ──
+          SingleChildScrollView(
+            controller: _scrollController,
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
 
-            // ── Selector de rol ──
-            Container(
-              decoration: BoxDecoration(
-                color: AppTheme.surface,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: AppTheme.border),
-              ),
-              padding: const EdgeInsets.all(4),
-              child: Row(
-                children: [
-                  _RoleBtn(
-                    label: 'Estudiante',
-                    icon: Icons.person_rounded,
-                    selected: _selectedRole == 'estudiante',
-                    onTap: () => _onRoleChanged('estudiante'),
+                // Selector de rol
+                Container(
+                  decoration: BoxDecoration(
+                    color: AppTheme.surface,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: AppTheme.border),
                   ),
-                  _RoleBtn(
-                    label: 'Docente',
-                    icon: Icons.school_rounded,
-                    selected: _selectedRole == 'docente',
-                    onTap: () => _onRoleChanged('docente'),
+                  padding: const EdgeInsets.all(4),
+                  child: Row(
+                    children: [
+                      _RoleBtn(
+                        label: 'Estudiante',
+                        icon: Icons.person_rounded,
+                        selected: _selectedRole == 'estudiante',
+                        onTap: () => _onRoleChanged('estudiante'),
+                      ),
+                      _RoleBtn(
+                        label: 'Docente',
+                        icon: Icons.school_rounded,
+                        selected: _selectedRole == 'docente',
+                        onTap: () => _onRoleChanged('docente'),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const Gap(20),
+
+                _Label('Nombre completo'),
+                const Gap(8),
+                TextField(
+                  controller: _nombreController,
+                  decoration: const InputDecoration(
+                    hintText: 'Ej: María García López',
+                    prefixIcon: Icon(Icons.person_outline),
+                  ),
+                  textCapitalization: TextCapitalization.words,
+                ),
+
+                if (esEstudiante) ...[
+                  const Gap(16),
+                  _Label('Código estudiantil (12 dígitos)'),
+                  const Gap(8),
+                  TextField(
+                    controller: _codigoController,
+                    decoration: const InputDecoration(
+                      hintText: 'Ej: 085400412023',
+                      prefixIcon: Icon(Icons.badge_outlined),
+                    ),
+                    keyboardType: TextInputType.number,
+                    maxLength: 12,
                   ),
                 ],
-              ),
-            ),
 
-            const Gap(20),
-
-            // ── Campos del formulario ──
-            _Label('Nombre completo'),
-            const Gap(8),
-            TextField(
-              controller: _nombreController,
-              decoration: const InputDecoration(
-                hintText: 'Ej: María García López',
-                prefixIcon: Icon(Icons.person_outline),
-              ),
-              textCapitalization: TextCapitalization.words,
-            ),
-
-            // ── Código (solo estudiante) ──
-            if (esEstudiante) ...[
-              const Gap(16),
-              _Label('Código estudiantil (12 dígitos)'),
-              const Gap(8),
-              TextField(
-                controller: _codigoController,
-                decoration: const InputDecoration(
-                  hintText: 'Ej: 085400412023',
-                  prefixIcon: Icon(Icons.badge_outlined),
-                ),
-                keyboardType: TextInputType.number,
-                maxLength: 12,
-              ),
-            ],
-
-            const Gap(16),
-            _Label('Correo electrónico'),
-            const Gap(8),
-            TextField(
-              controller: _emailController,
-              decoration: const InputDecoration(
-                hintText: 'correo@universidad.edu.co',
-                prefixIcon: Icon(Icons.email_outlined),
-              ),
-              keyboardType: TextInputType.emailAddress,
-            ),
-
-            const Gap(16),
-            _Label('Contraseña'),
-            const Gap(8),
-            TextField(
-              controller: _passwordController,
-              obscureText: _obscurePassword,
-              decoration: InputDecoration(
-                hintText: 'Mínimo 8 caracteres',
-                prefixIcon: const Icon(Icons.lock_outline),
-                suffixIcon: IconButton(
-                  icon: Icon(_obscurePassword
-                      ? Icons.visibility_outlined
-                      : Icons.visibility_off_outlined),
-                  onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
-                ),
-              ),
-            ),
-            const Gap(6),
-            Text(
-              '• Mín. 8 caracteres  • Una mayúscula  • Un número  • Un símbolo',
-              style: GoogleFonts.poppins(fontSize: 11, color: AppTheme.textSecondary),
-            ),
-
-            const Gap(16),
-            _Label('Confirmar contraseña'),
-            const Gap(8),
-            TextField(
-              controller: _confirmController,
-              obscureText: _obscureConfirm,
-              decoration: InputDecoration(
-                hintText: 'Repite la contraseña',
-                prefixIcon: const Icon(Icons.lock_outline),
-                suffixIcon: IconButton(
-                  icon: Icon(_obscureConfirm
-                      ? Icons.visibility_outlined
-                      : Icons.visibility_off_outlined),
-                  onPressed: () => setState(() => _obscureConfirm = !_obscureConfirm),
-                ),
-              ),
-            ),
-
-            // ── Sección de fotos (solo estudiante, debajo del formulario) ──
-            if (esEstudiante) ...[
-              const Gap(24),
-              _buildFotosSection(),
-            ],
-
-            const Gap(16),
-
-            // ── Error / Éxito ──
-            if (_error != null)
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: AppTheme.error.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: AppTheme.error),
-                ),
-                child: Text(_error!, style: GoogleFonts.poppins(color: AppTheme.error, fontSize: 13)),
-              ).animate().fadeIn(),
-
-            if (_success != null)
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: AppTheme.success.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: AppTheme.success),
-                ),
-                child: Text(_success!, style: GoogleFonts.poppins(color: AppTheme.success, fontSize: 13)),
-              ).animate().fadeIn(),
-
-            const Gap(16),
-
-            // ── Checkbox términos (solo estudiante — datos biométricos) ──
-            if (esEstudiante)
-            GestureDetector(
-              onTap: () => setState(() => _termsAccepted = !_termsAccepted),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    width: 22,
-                    height: 22,
-                    decoration: BoxDecoration(
-                      color: _termsAccepted ? AppTheme.primary : Colors.transparent,
-                      borderRadius: BorderRadius.circular(6),
-                      border: Border.all(
-                        color: _termsAccepted ? AppTheme.primary : AppTheme.textSecondary,
-                        width: 1.5,
-                      ),
-                    ),
-                    child: _termsAccepted
-                        ? const Icon(Icons.check, color: Colors.white, size: 14)
-                        : null,
+                const Gap(16),
+                _Label('Correo electrónico'),
+                const Gap(8),
+                TextField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(
+                    hintText: 'correo@universidad.edu.co',
+                    prefixIcon: Icon(Icons.email_outlined),
                   ),
-                  const Gap(10),
-                  Expanded(
-                    child: Wrap(
+                  keyboardType: TextInputType.emailAddress,
+                ),
+
+                const Gap(16),
+                _Label('Contraseña'),
+                const Gap(8),
+                TextField(
+                  controller: _passwordController,
+                  obscureText: _obscurePassword,
+                  decoration: InputDecoration(
+                    hintText: 'Mínimo 8 caracteres',
+                    prefixIcon: const Icon(Icons.lock_outline),
+                    suffixIcon: IconButton(
+                      icon: Icon(_obscurePassword
+                          ? Icons.visibility_outlined
+                          : Icons.visibility_off_outlined),
+                      onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                    ),
+                  ),
+                ),
+                const Gap(6),
+                Text(
+                  '• Mín. 8 caracteres  • Una mayúscula  • Un número  • Un símbolo',
+                  style: GoogleFonts.poppins(fontSize: 11, color: AppTheme.textSecondary),
+                ),
+
+                const Gap(16),
+                _Label('Confirmar contraseña'),
+                const Gap(8),
+                TextField(
+                  controller: _confirmController,
+                  obscureText: _obscureConfirm,
+                  decoration: InputDecoration(
+                    hintText: 'Repite la contraseña',
+                    prefixIcon: const Icon(Icons.lock_outline),
+                    suffixIcon: IconButton(
+                      icon: Icon(_obscureConfirm
+                          ? Icons.visibility_outlined
+                          : Icons.visibility_off_outlined),
+                      onPressed: () => setState(() => _obscureConfirm = !_obscureConfirm),
+                    ),
+                  ),
+                ),
+
+                if (esEstudiante) ...[
+                  const Gap(24),
+                  _buildFotosSection(),
+                ],
+
+                const Gap(16),
+
+                if (_error != null)
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: AppTheme.error.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: AppTheme.error),
+                    ),
+                    child: Text(_error!, style: GoogleFonts.poppins(color: AppTheme.error, fontSize: 13)),
+                  ).animate().fadeIn(),
+
+                if (_success != null)
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: AppTheme.success.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: AppTheme.success),
+                    ),
+                    child: Text(_success!, style: GoogleFonts.poppins(color: AppTheme.success, fontSize: 13)),
+                  ).animate().fadeIn(),
+
+                const Gap(16),
+
+                if (esEstudiante)
+                  GestureDetector(
+                    onTap: () => setState(() => _termsAccepted = !_termsAccepted),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text('He leído y acepto los ',
-                            style: GoogleFonts.poppins(fontSize: 12, color: AppTheme.textSecondary)),
-                        GestureDetector(
-                          onTap: _showTermsDialog,
-                          child: Text('Términos y Política de Privacidad',
-                              style: GoogleFonts.poppins(
-                                  fontSize: 12,
-                                  color: AppTheme.primary,
-                                  fontWeight: FontWeight.w600,
-                                  decoration: TextDecoration.underline,
-                                  decorationColor: AppTheme.primary)),
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          width: 22,
+                          height: 22,
+                          decoration: BoxDecoration(
+                            color: _termsAccepted ? AppTheme.primary : Colors.transparent,
+                            borderRadius: BorderRadius.circular(6),
+                            border: Border.all(
+                              color: _termsAccepted ? AppTheme.primary : AppTheme.textSecondary,
+                              width: 1.5,
+                            ),
+                          ),
+                          child: _termsAccepted
+                              ? const Icon(Icons.check, color: Colors.white, size: 14)
+                              : null,
                         ),
-                        Text(' (incluye datos biométricos)',
-                            style: GoogleFonts.poppins(fontSize: 12, color: AppTheme.textSecondary)),
+                        const Gap(10),
+                        Expanded(
+                          child: Wrap(
+                            children: [
+                              Text('He leído y acepto los ',
+                                  style: GoogleFonts.poppins(fontSize: 12, color: AppTheme.textSecondary)),
+                              GestureDetector(
+                                onTap: _showTermsDialog,
+                                child: Text('Términos y Política de Privacidad',
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 12,
+                                        color: AppTheme.primary,
+                                        fontWeight: FontWeight.w600,
+                                        decoration: TextDecoration.underline,
+                                        decorationColor: AppTheme.primary)),
+                              ),
+                              Text(' (incluye datos biométricos)',
+                                  style: GoogleFonts.poppins(fontSize: 12, color: AppTheme.textSecondary)),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                ],
-              ),
+
+                const Gap(16),
+
+                GradientButton(
+                  label: 'Registrarme como ${esEstudiante ? 'Estudiante' : 'Docente'}',
+                  isLoading: _isLoading,
+                  loadingText: _loadingMsg,
+                  onPressed: _isLoading ? null : _validarYConfirmar,
+                ),
+
+                const Gap(24),
+              ],
             ),
+          ),
 
-            const Gap(16),
-
-            // ── Botón ──
-            GradientButton(
-              label: 'Registrarme como ${esEstudiante ? 'Estudiante' : 'Docente'}',
-              isLoading: _isLoading,
-              loadingText: _loadingMsg,
-              onPressed: _isLoading ? null : _validarYConfirmar,
-            ),
-
-            const Gap(24),
-          ],
-        ),
+          // ── Overlay de cámara (cubre pantalla completa) ──
+          if (_cameraReady && _cameraController != null)
+            _buildCameraOverlay(),
+        ],
       ),
     );
   }
 
-  // ── Sección cámara/fotos ──────────────────────────────────
+  // ── Estado de fotos (sin cámara — el tamaño nunca cambia) ──
 
   Widget _buildFotosSection() {
     final tomadas  = _fotos.length;
     final completo = tomadas >= _totalFotos;
-    final instruccion = tomadas < _instrucciones.length ? _instrucciones[tomadas] : '';
 
     return Container(
       width: double.infinity,
@@ -704,65 +706,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
           ),
 
-          const Gap(12),
-
-          if (_cameraReady && _cameraController != null) ...[
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  AspectRatio(
-                    aspectRatio: 1,
-                    child: CameraPreview(_cameraController!),
-                  ),
-                  if (_cuenta > 0)
-                    Container(
-                      width: double.infinity,
-                      height: double.infinity,
-                      color: Colors.black.withValues(alpha: 0.4),
-                      alignment: Alignment.center,
-                      child: Text('$_cuenta',
-                          style: GoogleFonts.poppins(
-                              fontSize: 72, fontWeight: FontWeight.w900, color: Colors.white)),
-                    ),
-                  if (_cuenta == 0)
-                    Positioned(
-                      bottom: 10, left: 8, right: 8,
-                      child: Column(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                            decoration: BoxDecoration(
-                                color: Colors.black54, borderRadius: BorderRadius.circular(20)),
-                            child: Text(instruccion,
-                                style: GoogleFonts.poppins(color: Colors.white, fontSize: 12),
-                                textAlign: TextAlign.center),
-                          ),
-                          const Gap(6),
-                          ElevatedButton.icon(
-                            onPressed: _capturando ? null : _capturarSiguiente,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppTheme.secondary,
-                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                            ),
-                            icon: const Icon(Icons.camera_alt_rounded, color: Colors.white, size: 18),
-                            label: Text(
-                              _capturando ? 'Procesando...' : 'Tomar foto ${tomadas + 1}/$_totalFotos',
-                              style: GoogleFonts.poppins(color: Colors.white, fontSize: 13),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                ],
-              ),
-            ),
-            const Gap(12),
-          ],
-
           if (tomadas > 0) ...[
+            const Gap(12),
             SizedBox(
               height: 64,
               child: ListView.separated(
@@ -790,10 +735,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
               ),
             ),
-            const Gap(12),
           ],
 
-          if (!_cameraReady && !completo) ...[
+          if (!completo) ...[
+            const Gap(12),
             _buildRecomendaciones(),
             const Gap(12),
             SizedBox(
@@ -806,22 +751,176 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 12),
                 ),
                 icon: Icon(Icons.camera_alt_outlined, color: AppTheme.secondary),
-                label: Text('Abrir cámara para tomar fotos',
-                    style: GoogleFonts.poppins(color: AppTheme.secondary)),
+                label: Text(
+                  tomadas == 0
+                      ? 'Abrir cámara para tomar fotos'
+                      : 'Continuar tomando fotos (${_totalFotos - tomadas} restantes)',
+                  style: GoogleFonts.poppins(color: AppTheme.secondary),
+                ),
+              ),
+            ),
+            const Gap(8),
+            Text(
+              'Tip: frente, izq., der., arriba, abajo — varía el ángulo',
+              style: GoogleFonts.poppins(
+                  fontSize: 10, color: AppTheme.textSecondary, fontStyle: FontStyle.italic),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  // ── Overlay pantalla completa para la cámara ──────────────
+
+  Widget _buildCameraOverlay() {
+    final tomadas    = _fotos.length;
+    final instruccion = tomadas < _instrucciones.length ? _instrucciones[tomadas] : '';
+
+    return Material(
+      color: Colors.black,
+      child: SafeArea(
+        child: Column(
+          children: [
+            // Header
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.close, color: Colors.white),
+                    onPressed: _cerrarCamara,
+                  ),
+                  Expanded(
+                    child: Text(
+                      'Foto ${tomadas + 1} de $_totalFotos',
+                      style: GoogleFonts.poppins(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  const SizedBox(width: 48),
+                ],
+              ),
+            ),
+
+            // Vista de cámara
+            Expanded(
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  CameraPreview(_cameraController!),
+
+                  // Cuenta regresiva
+                  if (_cuenta > 0)
+                    Container(
+                      color: Colors.black54,
+                      child: Center(
+                        child: Text(
+                          '$_cuenta',
+                          style: GoogleFonts.poppins(
+                              fontSize: 120,
+                              fontWeight: FontWeight.w900,
+                              color: Colors.white),
+                        ),
+                      ),
+                    ),
+
+                  // Instrucción (solo cuando no hay countdown)
+                  if (_cuenta == 0 && !_capturando)
+                    Positioned(
+                      top: 16, left: 16, right: 16,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: Colors.black54,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          instruccion,
+                          style: GoogleFonts.poppins(color: Colors.white, fontSize: 13),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+
+                  // Indicador de procesando
+                  if (_capturando && _cuenta == 0)
+                    Positioned(
+                      top: 16, left: 16, right: 16,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: AppTheme.secondary.withValues(alpha: 0.85),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          'Procesando...',
+                          style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 13),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+
+            // Controles inferiores
+            Container(
+              color: Colors.black,
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
+              child: Column(
+                children: [
+                  // Miniaturas de fotos tomadas
+                  if (tomadas > 0) ...[
+                    SizedBox(
+                      height: 56,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: tomadas,
+                        separatorBuilder: (_, _) => const SizedBox(width: 8),
+                        itemBuilder: (_, i) => ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.file(_fotos[i], width: 56, height: 56, fit: BoxFit.cover),
+                        ),
+                      ),
+                    ),
+                    const Gap(14),
+                  ],
+
+                  // Botón de captura circular
+                  GestureDetector(
+                    onTap: (_capturando || _cuenta > 0) ? null : _capturarSiguiente,
+                    child: Container(
+                      width: 72,
+                      height: 72,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 3),
+                        color: (_capturando || _cuenta > 0)
+                            ? Colors.grey.shade800
+                            : Colors.white,
+                      ),
+                      child: (_capturando || _cuenta > 0)
+                          ? const Center(
+                              child: SizedBox(
+                                width: 28,
+                                height: 28,
+                                child: CircularProgressIndicator(
+                                    color: Colors.white, strokeWidth: 2.5),
+                              ),
+                            )
+                          : const Icon(Icons.camera_alt_rounded,
+                              color: Colors.black, size: 36),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
-
-          if (!completo)
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Text(
-                'Tip: frente, izq., der., arriba, abajo — varía el ángulo',
-                style: GoogleFonts.poppins(
-                    fontSize: 10, color: AppTheme.textSecondary, fontStyle: FontStyle.italic),
-              ),
-            ),
-        ],
+        ),
       ),
     );
   }
