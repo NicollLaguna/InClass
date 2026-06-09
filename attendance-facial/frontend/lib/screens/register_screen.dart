@@ -42,6 +42,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool _capturando     = false;
   int _cuenta          = 0;
 
+  final _scrollController = ScrollController();
+
   static const List<String> _instrucciones = [
     'Mira directo a la cámara',
     'Gira levemente a la izquierda',
@@ -416,6 +418,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _passwordController.dispose();
     _confirmController.dispose();
     _cameraController?.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -433,6 +436,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         elevation: 0,
       ),
       body: SingleChildScrollView(
+        controller: _scrollController,
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -635,23 +640,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
             // ── Botón ──
             SizedBox(
               width: double.infinity,
-              height: 52,
               child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size.fromHeight(52),
+                  padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+                ),
                 onPressed: _isLoading ? null : _validarYConfirmar,
                 child: _isLoading
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                    ? Column(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           const SizedBox(
                             height: 18, width: 18,
                             child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
                           ),
-                          const SizedBox(width: 12),
-                          Flexible(
-                            child: Text(_loadingMsg,
-                                style: GoogleFonts.poppins(fontSize: 12, color: Colors.white),
-                                textAlign: TextAlign.center),
-                          ),
+                          const SizedBox(height: 8),
+                          Text(_loadingMsg,
+                              style: GoogleFonts.poppins(fontSize: 12, color: Colors.white),
+                              textAlign: TextAlign.center),
                         ],
                       )
                     : Text('Registrarme como ${esEstudiante ? 'Estudiante' : 'Docente'}',
