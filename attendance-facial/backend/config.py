@@ -23,9 +23,9 @@ class Settings:
     JWT_ALGORITHM: str = "HS256"
     JWT_EXPIRATION_HOURS: int = 720  # 30 días
 
-    # ── Email (Resend HTTP API) ───────────────────────────
-    RESEND_API_KEY: str = os.getenv("RESEND_API_KEY", "")
-    EMAIL_FROM: str     = os.getenv("EMAIL_FROM", "")
+    # ── Email (Brevo HTTP API) ────────────────────────────
+    BREVO_API_KEY: str = os.getenv("BREVO_API_KEY", "")
+    EMAIL_FROM: str    = os.getenv("EMAIL_FROM", "")
 
     # ── Rutas locales ─────────────────────────────────────
     FACES_DIR: str = "data/faces"

@@ -58,17 +58,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (widget.initialRole != null) _selectedRole = widget.initialRole!;
   }
 
-  void _onRoleChanged(String role) {
-    if (_selectedRole == role) return;
-    _cerrarCamara();
-    setState(() {
-      _selectedRole = role;
-      _fotos.clear();
-      _error = null;
-      _success = null;
-    });
-  }
-
   // ── Cámara ────────────────────────────────────────────────
 
   Future<void> _abrirCamara() async {
@@ -244,12 +233,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void _validarYConfirmar() {
-    if (!_termsAccepted) {
+    final esEstudiante = _selectedRole == 'estudiante';
+
+    if (esEstudiante && !_termsAccepted) {
       setState(() => _error = 'Debes aceptar los Términos y Condiciones para continuar.');
       return;
     }
-
-    final esEstudiante = _selectedRole == 'estudiante';
 
     if (_nombreController.text.trim().isEmpty ||
         _emailController.text.trim().isEmpty ||
@@ -443,34 +432,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
-            // ── Selector de rol ──
-            Container(
-              decoration: BoxDecoration(
-                color: AppTheme.surface,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: AppTheme.border),
-              ),
-              padding: const EdgeInsets.all(4),
-              child: Row(
-                children: [
-                  _RoleBtn(
-                    label: 'Estudiante',
-                    icon: Icons.person_rounded,
-                    selected: _selectedRole == 'estudiante',
-                    onTap: () => _onRoleChanged('estudiante'),
-                  ),
-                  _RoleBtn(
-                    label: 'Docente',
-                    icon: Icons.school_rounded,
-                    selected: _selectedRole == 'docente',
-                    onTap: () => _onRoleChanged('docente'),
-                  ),
-                ],
-              ),
-            ).animate().fadeIn(duration: 400.ms),
-
-            const Gap(24),
-
             // ── Sección de fotos (solo estudiante) ──
             if (esEstudiante) ...[
               _buildFotosSection(),
@@ -588,7 +549,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
             const Gap(16),
 
-            // ── Checkbox términos ──
+            // ── Checkbox términos (solo estudiante — datos biométricos) ──
+            if (esEstudiante)
             GestureDetector(
               onTap: () => setState(() => _termsAccepted = !_termsAccepted),
               child: Row(
@@ -638,31 +600,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
             const Gap(16),
 
             // ── Botón ──
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(52),
-                  padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-                ),
-                onPressed: _isLoading ? null : _validarYConfirmar,
-                child: _isLoading
-                    ? Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const SizedBox(
-                            height: 18, width: 18,
-                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(_loadingMsg,
-                              style: GoogleFonts.poppins(fontSize: 12, color: Colors.white),
-                              textAlign: TextAlign.center),
-                        ],
-                      )
-                    : Text('Registrarme como ${esEstudiante ? 'Estudiante' : 'Docente'}',
-                        style: GoogleFonts.poppins(fontSize: 15)),
-              ),
+            GradientButton(
+              label: 'Registrarme como ${esEstudiante ? 'Estudiante' : 'Docente'}',
+              isLoading: _isLoading,
+              loadingText: _loadingMsg,
+              onPressed: _isLoading ? null : _validarYConfirmar,
             ),
 
             const Gap(24),
@@ -888,46 +830,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 }
 
 // ── Widgets auxiliares ────────────────────────────────────────
-
-class _RoleBtn extends StatelessWidget {
-  final String label;
-  final IconData icon;
-  final bool selected;
-  final VoidCallback onTap;
-
-  const _RoleBtn({required this.label, required this.icon, required this.selected, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: onTap,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(
-            gradient: selected ? AppTheme.primaryGradient : null,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: selected ? AppTheme.glowBlue : [],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, color: selected ? Colors.white : AppTheme.textSecondary, size: 18),
-              const Gap(6),
-              Text(label,
-                  style: GoogleFonts.poppins(
-                    color: selected ? Colors.white : AppTheme.textSecondary,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 13,
-                  )),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 class _Label extends StatelessWidget {
   final String text;

@@ -87,9 +87,9 @@ async def recognize_from_frame(sesion_id: str, payload: dict, user=Depends(requi
         porcentaje = int(score * 100)
 
         if not face_detected:
-            motivo = "No se detectó ningún rostro en la imagen."
+            motivo = "No se detectó ningún rostro. Asegúrate de estar frente a la cámara."
         else:
-            motivo = f"El rostro no coincide con {est['nombre']}. Confianza: {porcentaje}% (mínimo requerido: {int(settings.MIN_CONFIDENCE * 100)}%)"
+            motivo = "El rostro no coincide con el registrado. Intenta con mejor iluminación y sin objetos que cubran tu rostro."
 
         supabase.table("intentos_reconocimiento").insert({
             "sesion_id": sesion_id,

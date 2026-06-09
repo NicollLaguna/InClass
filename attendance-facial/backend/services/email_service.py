@@ -2,32 +2,36 @@ import httpx
 from config import settings
 
 
-def _resend_send(to: str, subject: str, html: str):
-    """Envío via Resend HTTP API — no usa SMTP, funciona en Railway."""
-    api_key = getattr(settings, "RESEND_API_KEY", None)
+def _brevo_send(to: str, subject: str, html: str):
+    """Envío via Brevo HTTP API — sin restricción de dominio, envía a cualquier destinatario."""
+    api_key = getattr(settings, "BREVO_API_KEY", None)
     if not api_key:
-        print("[email] RESEND_API_KEY no configurado — email omitido")
+        print("[email] BREVO_API_KEY no configurado — email omitido")
         return
-    from_addr = getattr(settings, "EMAIL_FROM", None) or "InClass <onboarding@resend.dev>"
+    from_email = getattr(settings, "EMAIL_FROM", None) or "nicky7u7lagos@gmail.com"
     try:
-        print(f"[email] Enviando via Resend a {to}: {subject}")
+        print(f"[email] Enviando via Brevo a {to}: {subject}")
         resp = httpx.post(
-            "https://api.resend.com/emails",
-            headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
-            json={"from": from_addr, "to": [to], "subject": subject, "html": html},
+            "https://api.brevo.com/v3/smtp/email",
+            headers={"api-key": api_key, "Content-Type": "application/json"},
+            json={
+                "sender": {"name": "InClass", "email": from_email},
+                "to": [{"email": to}],
+                "subject": subject,
+                "htmlContent": html,
+            },
             timeout=15,
         )
-        if resp.status_code in (200, 201):
+        if resp.status_code in (200, 201, 202):
             print(f"[email] ✓ Enviado a {to}: {subject}")
         else:
-            print(f"[email] ✗ Resend error {resp.status_code}: {resp.text}")
+            print(f"[email] ✗ Brevo error {resp.status_code}: {resp.text}")
     except Exception as e:
         print(f"[email] ✗ Error inesperado: {type(e).__name__}: {e}")
 
 
 def _send(to: str, subject: str, html: str):
-    """Envío sincrónico — Resend responde en <500ms, no necesita hilo."""
-    _resend_send(to, subject, html)
+    _brevo_send(to, subject, html)
 
 
 def _base_template(content: str) -> str:
@@ -141,7 +145,6 @@ def send_estudiante_asistencia(email: str, nombre: str, curso: str,
       <p style="margin:4px 0"><b>Docente:</b> {docente}</p>
       <p style="margin:4px 0"><b>Fecha:</b> {fecha}</p>
       <p style="margin:4px 0"><b>Hora:</b> {hora}</p>
-      <p style="margin:4px 0"><b>Confianza:</b> {int(confianza * 100)}%</p>
     </div>
     <p>Si no fuiste tú, contacta inmediatamente a tu docente.</p>
     """

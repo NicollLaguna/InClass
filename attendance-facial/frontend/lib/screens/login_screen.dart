@@ -88,20 +88,25 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth  = MediaQuery.of(context).size.width;
+    final isSmall      = screenHeight < 680;
+    final hPad         = screenWidth > 480 ? (screenWidth - 440) / 2.0 : 24.0;
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(gradient: AppTheme.splashGradient),
         child: SafeArea(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
+            padding: EdgeInsets.symmetric(horizontal: hPad),
             child: Column(
               children: [
-                const Gap(48),
+                Gap(isSmall ? 28 : 48),
 
                 // Logo
                 Container(
-                      width: 88,
-                      height: 88,
+                      width: isSmall ? 72 : 88,
+                      height: isSmall ? 72 : 88,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         boxShadow: AppTheme.glowBlue,
@@ -128,12 +133,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     .fadeIn(duration: 600.ms)
                     .scale(begin: const Offset(0.8, 0.8)),
 
-                const Gap(20),
+                Gap(isSmall ? 12 : 20),
 
                 Text(
                   'InClass',
                   style: GoogleFonts.poppins(
-                    fontSize: 30,
+                    fontSize: isSmall ? 26 : 30,
                     fontWeight: FontWeight.w700,
                     color: AppTheme.textPrimary,
                     letterSpacing: -0.5,
@@ -148,7 +153,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ).animate().fadeIn(delay: 300.ms),
 
-                const Gap(36),
+                Gap(isSmall ? 20 : 36),
 
                 // Role selector
                 Container(
@@ -246,7 +251,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ).animate().fadeIn().slideY(begin: 0.2),
                 ],
 
-                const Gap(24),
+                Gap(isSmall ? 16 : 24),
 
                 GradientButton(
                   label: 'Iniciar Sesión',
@@ -255,7 +260,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   isLoading: _isLoading,
                 ).animate().fadeIn(delay: 700.ms),
 
-                const Gap(28),
+                Gap(isSmall ? 18 : 28),
 
                 // Register link
                 Column(
@@ -291,7 +296,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ).animate().fadeIn(delay: 800.ms),
 
-                const Gap(32),
+                Gap(isSmall ? 20 : 32),
               ],
             ),
           ),

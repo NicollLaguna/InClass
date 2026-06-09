@@ -96,7 +96,10 @@ class AppTheme {
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
-        backgroundColor: WidgetStateProperty.all(Colors.transparent),
+        backgroundColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.disabled)) return const Color(0xFF2D3748);
+          return primary;
+        }),
         foregroundColor: WidgetStateProperty.all(Colors.white),
         padding: WidgetStateProperty.all(
           const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
@@ -176,6 +179,7 @@ class GradientButton extends StatelessWidget {
   final bool isLoading;
   final double height;
   final IconData? icon;
+  final String? loadingText;
 
   const GradientButton({
     super.key,
@@ -184,44 +188,69 @@ class GradientButton extends StatelessWidget {
     this.isLoading = false,
     this.height = 52,
     this.icon,
+    this.loadingText,
   });
 
   @override
   Widget build(BuildContext context) {
+    final bool disabled = onPressed == null;
     return SizedBox(
       width: double.infinity,
-      height: height,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          gradient: onPressed == null
-              ? const LinearGradient(colors: [Color(0xFF2D3748), Color(0xFF2D3748)])
-              : AppTheme.primaryGradient,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: onPressed == null ? [] : AppTheme.glowBlue,
-        ),
-        child: ElevatedButton(
-          onPressed: isLoading ? null : onPressed,
-          child: isLoading
-              ? const SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-                )
-              : Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (icon != null) ...[
-                      Icon(icon, size: 18, color: Colors.white),
-                      const SizedBox(width: 8),
-                    ],
-                    Text(label,
-                        style: GoogleFonts.poppins(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        )),
-                  ],
-                ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(16),
+        child: Ink(
+          decoration: BoxDecoration(
+            gradient: disabled
+                ? const LinearGradient(colors: [Color(0xFF2D3748), Color(0xFF2D3748)])
+                : AppTheme.primaryGradient,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: disabled ? [] : AppTheme.glowBlue,
+          ),
+          child: InkWell(
+            onTap: (isLoading || disabled) ? null : onPressed,
+            borderRadius: BorderRadius.circular(16),
+            splashColor: Colors.white.withValues(alpha: 0.15),
+            child: Container(
+              constraints: BoxConstraints(minHeight: height),
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+              child: isLoading
+                  ? Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                        ),
+                        if (loadingText != null && loadingText!.isNotEmpty) ...[
+                          const SizedBox(height: 8),
+                          Text(
+                            loadingText!,
+                            style: GoogleFonts.poppins(fontSize: 12, color: Colors.white),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ],
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (icon != null) ...[
+                          Icon(icon, size: 18, color: Colors.white),
+                          const SizedBox(width: 8),
+                        ],
+                        Text(label,
+                            style: GoogleFonts.poppins(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            )),
+                      ],
+                    ),
+            ),
+          ),
         ),
       ),
     );
