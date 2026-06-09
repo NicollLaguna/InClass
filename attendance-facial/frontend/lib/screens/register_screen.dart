@@ -443,124 +443,122 @@ class _RegisterScreenState extends State<RegisterScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
-            // ── Selector de rol (oculto cuando la cámara está activa) ──
-            if (!_cameraReady) ...[
-              Container(
-                decoration: BoxDecoration(
-                  color: AppTheme.surface,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppTheme.border),
-                ),
-                padding: const EdgeInsets.all(4),
-                child: Row(
-                  children: [
-                    _RoleBtn(
-                      label: 'Estudiante',
-                      icon: Icons.person_rounded,
-                      selected: _selectedRole == 'estudiante',
-                      onTap: () => _onRoleChanged('estudiante'),
-                    ),
-                    _RoleBtn(
-                      label: 'Docente',
-                      icon: Icons.school_rounded,
-                      selected: _selectedRole == 'docente',
-                      onTap: () => _onRoleChanged('docente'),
-                    ),
-                  ],
-                ),
-              ).animate().fadeIn(duration: 400.ms),
-              const Gap(24),
-            ],
-
-            // ── Sección de fotos (solo estudiante) ──
-            if (esEstudiante) ...[
-              _buildFotosSection(),
-              const Gap(24),
-            ],
-
-            // ── Campos comunes ──
-            if (!_cameraReady) ...[
-              _Label('Nombre completo'),
-              const Gap(8),
-              TextField(
-                controller: _nombreController,
-                decoration: const InputDecoration(
-                  hintText: 'Ej: María García López',
-                  prefixIcon: Icon(Icons.person_outline),
-                ),
-                textCapitalization: TextCapitalization.words,
-              ).animate().fadeIn(delay: 100.ms),
-
-              // ── Código (solo estudiante) ──
-              if (esEstudiante) ...[
-                const Gap(16),
-                _Label('Código estudiantil (12 dígitos)'),
-                const Gap(8),
-                TextField(
-                  controller: _codigoController,
-                  decoration: const InputDecoration(
-                    hintText: 'Ej: 085400412023',
-                    prefixIcon: Icon(Icons.badge_outlined),
-                  ),
-                  keyboardType: TextInputType.number,
-                  maxLength: 12,
-                ).animate().fadeIn(delay: 150.ms),
-              ],
-
-              _Label('Correo electrónico'),
-              const Gap(8),
-              TextField(
-                controller: _emailController,
-                decoration: const InputDecoration(
-                  hintText: 'correo@universidad.edu.co',
-                  prefixIcon: Icon(Icons.email_outlined),
-                ),
-                keyboardType: TextInputType.emailAddress,
-              ).animate().fadeIn(delay: 200.ms),
-
-              const Gap(16),
-              _Label('Contraseña'),
-              const Gap(8),
-              TextField(
-                controller: _passwordController,
-                obscureText: _obscurePassword,
-                decoration: InputDecoration(
-                  hintText: 'Mínimo 8 caracteres',
-                  prefixIcon: const Icon(Icons.lock_outline),
-                  suffixIcon: IconButton(
-                    icon: Icon(_obscurePassword
-                        ? Icons.visibility_outlined
-                        : Icons.visibility_off_outlined),
-                    onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
-                  ),
-                ),
-              ).animate().fadeIn(delay: 250.ms),
-              const Gap(6),
-              Text(
-                '• Mín. 8 caracteres  • Una mayúscula  • Un número  • Un símbolo',
-                style: GoogleFonts.poppins(fontSize: 11, color: AppTheme.textSecondary),
+            // ── Selector de rol ──
+            Container(
+              decoration: BoxDecoration(
+                color: AppTheme.surface,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: AppTheme.border),
               ),
+              padding: const EdgeInsets.all(4),
+              child: Row(
+                children: [
+                  _RoleBtn(
+                    label: 'Estudiante',
+                    icon: Icons.person_rounded,
+                    selected: _selectedRole == 'estudiante',
+                    onTap: () => _onRoleChanged('estudiante'),
+                  ),
+                  _RoleBtn(
+                    label: 'Docente',
+                    icon: Icons.school_rounded,
+                    selected: _selectedRole == 'docente',
+                    onTap: () => _onRoleChanged('docente'),
+                  ),
+                ],
+              ),
+            ).animate().fadeIn(duration: 400.ms),
 
+            const Gap(20),
+
+            // ── Campos del formulario ──
+            _Label('Nombre completo'),
+            const Gap(8),
+            TextField(
+              controller: _nombreController,
+              decoration: const InputDecoration(
+                hintText: 'Ej: María García López',
+                prefixIcon: Icon(Icons.person_outline),
+              ),
+              textCapitalization: TextCapitalization.words,
+            ).animate().fadeIn(delay: 100.ms),
+
+            // ── Código (solo estudiante) ──
+            if (esEstudiante) ...[
               const Gap(16),
-              _Label('Confirmar contraseña'),
+              _Label('Código estudiantil (12 dígitos)'),
               const Gap(8),
               TextField(
-                controller: _confirmController,
-                obscureText: _obscureConfirm,
-                decoration: InputDecoration(
-                  hintText: 'Repite la contraseña',
-                  prefixIcon: const Icon(Icons.lock_outline),
-                  suffixIcon: IconButton(
-                    icon: Icon(_obscureConfirm
-                        ? Icons.visibility_outlined
-                        : Icons.visibility_off_outlined),
-                    onPressed: () => setState(() => _obscureConfirm = !_obscureConfirm),
-                  ),
+                controller: _codigoController,
+                decoration: const InputDecoration(
+                  hintText: 'Ej: 085400412023',
+                  prefixIcon: Icon(Icons.badge_outlined),
                 ),
-              ).animate().fadeIn(delay: 300.ms),
-
-              const Gap(24),
+                keyboardType: TextInputType.number,
+                maxLength: 12,
+              ).animate().fadeIn(delay: 150.ms),
             ],
+
+            const Gap(16),
+            _Label('Correo electrónico'),
+            const Gap(8),
+            TextField(
+              controller: _emailController,
+              decoration: const InputDecoration(
+                hintText: 'correo@universidad.edu.co',
+                prefixIcon: Icon(Icons.email_outlined),
+              ),
+              keyboardType: TextInputType.emailAddress,
+            ).animate().fadeIn(delay: 200.ms),
+
+            const Gap(16),
+            _Label('Contraseña'),
+            const Gap(8),
+            TextField(
+              controller: _passwordController,
+              obscureText: _obscurePassword,
+              decoration: InputDecoration(
+                hintText: 'Mínimo 8 caracteres',
+                prefixIcon: const Icon(Icons.lock_outline),
+                suffixIcon: IconButton(
+                  icon: Icon(_obscurePassword
+                      ? Icons.visibility_outlined
+                      : Icons.visibility_off_outlined),
+                  onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                ),
+              ),
+            ).animate().fadeIn(delay: 250.ms),
+            const Gap(6),
+            Text(
+              '• Mín. 8 caracteres  • Una mayúscula  • Un número  • Un símbolo',
+              style: GoogleFonts.poppins(fontSize: 11, color: AppTheme.textSecondary),
+            ),
+
+            const Gap(16),
+            _Label('Confirmar contraseña'),
+            const Gap(8),
+            TextField(
+              controller: _confirmController,
+              obscureText: _obscureConfirm,
+              decoration: InputDecoration(
+                hintText: 'Repite la contraseña',
+                prefixIcon: const Icon(Icons.lock_outline),
+                suffixIcon: IconButton(
+                  icon: Icon(_obscureConfirm
+                      ? Icons.visibility_outlined
+                      : Icons.visibility_off_outlined),
+                  onPressed: () => setState(() => _obscureConfirm = !_obscureConfirm),
+                ),
+              ),
+            ).animate().fadeIn(delay: 300.ms),
+
+            // ── Sección de fotos (solo estudiante, debajo del formulario) ──
+            if (esEstudiante) ...[
+              const Gap(24),
+              _buildFotosSection(),
+            ],
+
+            const Gap(16),
 
             // ── Error / Éxito ──
             if (_error != null)
