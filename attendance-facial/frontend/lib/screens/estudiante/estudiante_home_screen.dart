@@ -228,28 +228,19 @@ class _MenuCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              width: 52,
-              height: 52,
-              padding: imagePath != null ? EdgeInsets.zero : const EdgeInsets.all(10),
-              decoration: imagePath != null
-                  ? null
-                  : BoxDecoration(
-                      color: color.withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+              width: 56,
+              height: 56,
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(14),
+              ),
               child: imagePath != null
                   ? Image.asset(
                       imagePath!,
-                      width: 52,
-                      height: 52,
-                      errorBuilder: (ctx, err, st) => Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: color.withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Icon(icon, color: color, size: 26),
-                      ),
+                      fit: BoxFit.contain,
+                      errorBuilder: (ctx, err, st) =>
+                          Icon(icon, color: color, size: 26),
                     )
                   : Icon(icon, color: color, size: 26),
             ),
