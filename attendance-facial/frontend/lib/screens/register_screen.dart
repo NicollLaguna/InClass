@@ -467,7 +467,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ],
               ),
-            ).animate().fadeIn(duration: 400.ms),
+            ),
 
             const Gap(20),
 
@@ -481,7 +481,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 prefixIcon: Icon(Icons.person_outline),
               ),
               textCapitalization: TextCapitalization.words,
-            ).animate().fadeIn(delay: 100.ms),
+            ),
 
             // ── Código (solo estudiante) ──
             if (esEstudiante) ...[
@@ -496,7 +496,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 keyboardType: TextInputType.number,
                 maxLength: 12,
-              ).animate().fadeIn(delay: 150.ms),
+              ),
             ],
 
             const Gap(16),
@@ -509,7 +509,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 prefixIcon: Icon(Icons.email_outlined),
               ),
               keyboardType: TextInputType.emailAddress,
-            ).animate().fadeIn(delay: 200.ms),
+            ),
 
             const Gap(16),
             _Label('Contraseña'),
@@ -527,7 +527,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
                 ),
               ),
-            ).animate().fadeIn(delay: 250.ms),
+            ),
             const Gap(6),
             Text(
               '• Mín. 8 caracteres  • Una mayúscula  • Un número  • Un símbolo',
@@ -550,7 +550,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   onPressed: () => setState(() => _obscureConfirm = !_obscureConfirm),
                 ),
               ),
-            ).animate().fadeIn(delay: 300.ms),
+            ),
 
             // ── Sección de fotos (solo estudiante, debajo del formulario) ──
             if (esEstudiante) ...[
@@ -633,7 +633,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ],
               ),
-            ).animate().fadeIn(delay: 350.ms),
+            ),
 
             const Gap(16),
 
@@ -823,7 +823,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
         ],
       ),
-    ).animate().fadeIn().scale();
+    );
   }
 
   Widget _buildRecomendaciones() {
