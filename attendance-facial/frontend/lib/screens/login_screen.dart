@@ -4,8 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:gap/gap.dart';
 import '../theme/app_theme.dart';
 import '../services/api_service.dart';
-import 'register_screen_docente.dart';
-import 'register_screen_estudiante.dart';
+import 'register_screen.dart';
 import 'docente/docente_home_screen.dart';
 import 'estudiante/estudiante_home_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -275,13 +274,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           onTap: () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) => _selectedRole == 'docente'
-                                  ? const RegisterScreenDocente()
-                                  : const RegisterScreenEstudiante(),
+                              builder: (_) => RegisterScreen(initialRole: _selectedRole),
                             ),
                           ),
                           child: Text(
-                            'Regístrate',
+                            'Regístrate como ${_selectedRole == 'docente' ? 'Docente' : 'Estudiante'}',
                             style: GoogleFonts.poppins(
                               color: AppTheme.primary,
                               fontWeight: FontWeight.w600,
