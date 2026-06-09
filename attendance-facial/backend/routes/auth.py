@@ -131,15 +131,12 @@ def require_estudiante(user=Depends(get_current_user)):
 
 @router.post("/docente/register")
 async def register_docente(data: DocenteRegister):
-    # Verifica duplicado email
-    existing = supabase.table("docentes").select("id").eq("email", data.email).execute()
-    if existing.data:
-        raise HTTPException(status_code=400, detail="El email ya está registrado.")
-
-    # Verifica duplicado nombre
-    existing_nombre = supabase.table("docentes").select("id").eq("nombre", data.nombre).execute()
-    if existing_nombre.data:
-        raise HTTPException(status_code=400, detail="Ya existe un docente con ese nombre.")
+    # Email duplicado en docentes
+    if supabase.table("docentes").select("id").eq("email", data.email).execute().data:
+        raise HTTPException(status_code=400, detail="El correo ya está registrado como docente.")
+    # Email duplicado en estudiantes (un correo no puede estar en ambas tablas)
+    if supabase.table("estudiantes").select("id").eq("email", data.email).execute().data:
+        raise HTTPException(status_code=400, detail="El correo ya está registrado como estudiante.")
 
     supabase.table("docentes").insert({
         "nombre": data.nombre,
@@ -155,20 +152,15 @@ async def register_docente(data: DocenteRegister):
 
 @router.post("/estudiante/register")
 async def register_estudiante(data: EstudianteRegister):
-    # Verifica duplicado email
-    existing_email = supabase.table("estudiantes").select("id").eq("email", data.email).execute()
-    if existing_email.data:
-        raise HTTPException(status_code=400, detail="El email ya está registrado.")
-
-    # Verifica duplicado código
-    existing_codigo = supabase.table("estudiantes").select("id").eq("codigo", data.codigo).execute()
-    if existing_codigo.data:
-        raise HTTPException(status_code=400, detail="El código ya está registrado.")
-
-    # Verifica duplicado nombre
-    existing_nombre = supabase.table("estudiantes").select("id").eq("nombre", data.nombre).execute()
-    if existing_nombre.data:
-        raise HTTPException(status_code=400, detail="Ya existe un estudiante con ese nombre.")
+    # Email duplicado en estudiantes
+    if supabase.table("estudiantes").select("id").eq("email", data.email).execute().data:
+        raise HTTPException(status_code=400, detail="El correo ya está registrado.")
+    # Email duplicado en docentes (un correo no puede estar en ambas tablas)
+    if supabase.table("docentes").select("id").eq("email", data.email).execute().data:
+        raise HTTPException(status_code=400, detail="El correo ya está registrado como docente.")
+    # Código duplicado
+    if supabase.table("estudiantes").select("id").eq("codigo", data.codigo).execute().data:
+        raise HTTPException(status_code=400, detail="El código estudiantil ya está registrado.")
 
     supabase.table("estudiantes").insert({
         "nombre": data.nombre,
