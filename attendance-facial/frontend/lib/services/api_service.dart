@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
@@ -5,7 +6,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://192.168.18.155:8000';
+  static const String baseUrl = 'https://inclass-production-e6ed.up.railway.app';
 
   // ── Token management ───────────────────────────────────
 
@@ -45,6 +46,18 @@ class ApiService {
       'email': prefs.getString('email') ?? '',
       'id': prefs.getString('id') ?? '',
     };
+  }
+
+  static Future<bool> validateToken() async {
+    try {
+      final headers = await getHeaders();
+      final response = await http
+          .get(Uri.parse('$baseUrl/auth/me'), headers: headers)
+          .timeout(const Duration(seconds: 5));
+      return response.statusCode == 200;
+    } catch (_) {
+      return false;
+    }
   }
 
   // ── Auth ───────────────────────────────────────────────
@@ -245,7 +258,7 @@ class ApiService {
   static Future<Map<String, dynamic>> registerStudent({
     required String nombre,
     required String codigo,
-    required File foto,
+    required List<File> fotos,
   }) async {
     final token = await getToken();
     final uri = Uri.parse('$baseUrl/students/register');
@@ -253,11 +266,13 @@ class ApiService {
     request.headers['Authorization'] = 'Bearer $token';
     request.fields['nombre'] = nombre;
     request.fields['codigo'] = codigo;
-    request.files.add(await http.MultipartFile.fromPath(
-      'foto',
-      foto.path,
-      contentType: MediaType('image', 'jpeg'),
-    ));
+    for (final foto in fotos) {
+      request.files.add(await http.MultipartFile.fromPath(
+        'fotos',
+        foto.path,
+        contentType: MediaType('image', 'jpeg'),
+      ));
+    }
     final response = await request.send();
     final body = await response.stream.bytesToString();
     return jsonDecode(body);

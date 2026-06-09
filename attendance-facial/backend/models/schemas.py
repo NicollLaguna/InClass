@@ -10,7 +10,6 @@ class StudentResponse(BaseModel):
     id: str
     nombre: str
     codigo: str
-    foto_url: Optional[str] = None
 
 class AttendanceRecord(BaseModel):
     estudiante_id: str
