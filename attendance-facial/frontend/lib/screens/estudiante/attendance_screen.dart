@@ -171,8 +171,7 @@ class _AttendanceScreenState extends State<AttendanceScreen>
         setState(() {
           _resultado = '${result['mensaje']}\n'
               'Curso: ${result['curso']}\n'
-              'Hora: ${result['hora']}\n'
-              'Confianza: ${result['confianza']}';
+              'Hora: ${result['hora']}';
           _resultadoExito = true;
           _registrado = true;
         });
@@ -502,7 +501,9 @@ class _AttendanceScreenState extends State<AttendanceScreen>
 
                     // Overlay: face guide oval
                     Positioned.fill(
-                      child: CustomPaint(painter: _FaceOvalPainter()),
+                      child: CustomPaint(
+                          painter: _FaceOvalPainter(
+                              isDetecting: _procesando)),
                     ),
 
                     // Scanning indicator
@@ -578,32 +579,51 @@ class _AttendanceScreenState extends State<AttendanceScreen>
 }
 
 class _FaceOvalPainter extends CustomPainter {
+  final bool isDetecting;
+  const _FaceOvalPainter({this.isDetecting = false});
+
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.6)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.5;
-
     final cx = size.width / 2;
     final cy = size.height * 0.42;
     final rx = size.width * 0.36;
     final ry = size.height * 0.30;
-
-    canvas.drawOval(Rect.fromCenter(
-        center: Offset(cx, cy), width: rx * 2, height: ry * 2), paint);
+    final ovalRect = Rect.fromCenter(
+        center: Offset(cx, cy), width: rx * 2, height: ry * 2);
 
     // Dim overlay outside oval
     final dimPaint = Paint()..color = Colors.black.withValues(alpha: 0.35);
-    final fullRect = Rect.fromLTWH(0, 0, size.width, size.height);
-    final ovalPath = Path()
-      ..addOval(Rect.fromCenter(
-          center: Offset(cx, cy), width: rx * 2, height: ry * 2));
     final outerPath = Path.combine(
-        PathOperation.difference, Path()..addRect(fullRect), ovalPath);
+      PathOperation.difference,
+      Path()..addRect(Rect.fromLTWH(0, 0, size.width, size.height)),
+      Path()..addOval(ovalRect),
+    );
     canvas.drawPath(outerPath, dimPaint);
+
+    // Glow when detecting
+    if (isDetecting) {
+      canvas.drawOval(
+        ovalRect,
+        Paint()
+          ..color = const Color(0x661E90FF)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 8
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8),
+      );
+    }
+
+    // Main oval stroke
+    canvas.drawOval(
+      ovalRect,
+      Paint()
+        ..color = isDetecting
+            ? const Color(0xFF1E90FF)
+            : Colors.white.withValues(alpha: 0.7)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = isDetecting ? 3.0 : 2.5,
+    );
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(_FaceOvalPainter old) => old.isDetecting != isDetecting;
 }
