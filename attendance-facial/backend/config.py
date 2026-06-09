@@ -23,12 +23,9 @@ class Settings:
     JWT_ALGORITHM: str = "HS256"
     JWT_EXPIRATION_HOURS: int = 720  # 30 días
 
-    # ── Email (Gmail SMTP) ────────────────────────────────
-    SMTP_HOST: str     = os.getenv("SMTP_HOST", "smtp.gmail.com")
-    SMTP_PORT: int     = int(os.getenv("SMTP_PORT", "587"))
-    SMTP_USER: str     = os.getenv("SMTP_USER", "")
-    SMTP_PASSWORD: str = os.getenv("SMTP_PASSWORD", "")
-    EMAIL_FROM: str    = os.getenv("EMAIL_FROM", "")
+    # ── Email (Resend HTTP API) ───────────────────────────
+    RESEND_API_KEY: str = os.getenv("RESEND_API_KEY", "")
+    EMAIL_FROM: str     = os.getenv("EMAIL_FROM", "")
 
     # ── Rutas locales ─────────────────────────────────────
     FACES_DIR: str = "data/faces"

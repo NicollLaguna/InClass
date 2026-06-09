@@ -1,42 +1,34 @@
-import smtplib
 import threading
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
+import httpx
 from config import settings
 
 
-def _smtp_send(to: str, subject: str, html: str):
-    """Envío real via SMTP — se ejecuta en un hilo para no bloquear FastAPI."""
-    if not settings.SMTP_USER or not settings.SMTP_PASSWORD:
-        print("[email] SMTP_USER o SMTP_PASSWORD no configurados — email omitido")
-        print(f"[email] SMTP_USER={repr(settings.SMTP_USER)} SMTP_HOST={settings.SMTP_HOST}:{settings.SMTP_PORT}")
+def _resend_send(to: str, subject: str, html: str):
+    """Envío via Resend HTTP API — no usa SMTP, funciona en Railway."""
+    api_key = getattr(settings, "RESEND_API_KEY", None)
+    if not api_key:
+        print("[email] RESEND_API_KEY no configurado — email omitido")
         return
+    from_addr = getattr(settings, "EMAIL_FROM", None) or "InClass <onboarding@resend.dev>"
     try:
-        print(f"[email] Conectando a {settings.SMTP_HOST}:{settings.SMTP_PORT} como {settings.SMTP_USER}")
-        msg = MIMEMultipart("alternative")
-        msg["Subject"] = subject
-        msg["From"]    = settings.EMAIL_FROM or settings.SMTP_USER
-        msg["To"]      = to
-        msg.attach(MIMEText(html, "html", "utf-8"))
-
-        with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT, timeout=30) as server:
-            server.ehlo()
-            server.starttls()
-            server.ehlo()
-            server.login(settings.SMTP_USER, settings.SMTP_PASSWORD)
-            server.sendmail(settings.SMTP_USER, to, msg.as_string())
-        print(f"[email] ✓ Enviado a {to}: {subject}")
-    except smtplib.SMTPAuthenticationError:
-        print("[email] ✗ Error de autenticación — verifica SMTP_USER y SMTP_PASSWORD (usa App Password de Google, no la contraseña normal)")
-    except smtplib.SMTPException as e:
-        print(f"[email] ✗ Error SMTP: {e}")
+        print(f"[email] Enviando via Resend a {to}: {subject}")
+        resp = httpx.post(
+            "https://api.resend.com/emails",
+            headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+            json={"from": from_addr, "to": [to], "subject": subject, "html": html},
+            timeout=15,
+        )
+        if resp.status_code in (200, 201):
+            print(f"[email] ✓ Enviado a {to}: {subject}")
+        else:
+            print(f"[email] ✗ Resend error {resp.status_code}: {resp.text}")
     except Exception as e:
         print(f"[email] ✗ Error inesperado: {type(e).__name__}: {e}")
 
 
 def _send(to: str, subject: str, html: str):
     """Lanza el envío en un hilo para no bloquear las rutas async."""
-    threading.Thread(target=_smtp_send, args=(to, subject, html), daemon=True).start()
+    threading.Thread(target=_resend_send, args=(to, subject, html), daemon=True).start()
 
 
 def _base_template(content: str) -> str:
