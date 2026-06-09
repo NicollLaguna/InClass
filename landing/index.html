@@ -1,31 +1,42 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>InClass — Asistencia Facial con IA</title>
-  <meta name="description" content="InClass automatiza el registro de asistencia universitaria mediante reconocimiento facial con IA. Sin listas, sin papel." />
+  <meta name="description"
+    content="InClass automatiza el registro de asistencia universitaria mediante reconocimiento facial con IA. Sin listas, sin papel." />
   <link rel="icon" type="image/png" href="icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg:        #0A0A0A;
-      --surface:   #161B22;
-      --surface2:  #1E2530;
-      --primary:   #1E90FF;
-      --secondary: #00D4FF;
-      --success:   #00E676;
-      --warning:   #FFB300;
-      --text:      #FFFFFF;
-      --muted:     #B0B7C3;
-      --border:    #2D3748;
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
-    html { scroll-behavior: smooth; }
+    :root {
+      --bg: #0A0A0A;
+      --surface: #161B22;
+      --surface2: #1E2530;
+      --primary: #1E90FF;
+      --secondary: #00D4FF;
+      --success: #00E676;
+      --warning: #FFB300;
+      --text: #FFFFFF;
+      --muted: #B0B7C3;
+      --border: #2D3748;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
 
     body {
       background: var(--bg);
@@ -49,13 +60,13 @@
       align-items: center;
       justify-content: space-between;
       padding: 1.1rem 2rem;
-      background: rgba(10,10,10,.85);
+      background: rgba(10, 10, 10, .85);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       position: sticky;
       top: 0;
       z-index: 100;
-      border-bottom: 1px solid rgba(30,144,255,.12);
+      border-bottom: 1px solid rgba(30, 144, 255, .12);
     }
 
     .nav-logo {
@@ -64,12 +75,14 @@
       gap: .75rem;
       text-decoration: none;
     }
+
     .nav-logo img {
       width: 36px;
       height: 36px;
       border-radius: 10px;
-      box-shadow: 0 0 14px rgba(30,144,255,.5);
+      box-shadow: 0 0 14px rgba(30, 144, 255, .5);
     }
+
     .nav-logo-text {
       font-size: 1.3rem;
       font-weight: 800;
@@ -79,6 +92,7 @@
       background-clip: text;
       letter-spacing: -.5px;
     }
+
     .nav-badge {
       background: linear-gradient(90deg, var(--primary), var(--secondary));
       color: #fff;
@@ -99,7 +113,7 @@
       text-align: center;
       padding: 5rem 1.5rem 4rem;
       background:
-        radial-gradient(ellipse 70% 50% at 50% -10%, rgba(30,144,255,.18) 0%, transparent 70%),
+        radial-gradient(ellipse 70% 50% at 50% -10%, rgba(30, 144, 255, .18) 0%, transparent 70%),
         linear-gradient(180deg, #0A0A0A 0%, #0D1117 50%, #0A0F1A 100%);
       position: relative;
     }
@@ -108,17 +122,22 @@
     .hero::before {
       content: '';
       position: absolute;
-      width: 400px; height: 400px;
-      background: radial-gradient(circle, rgba(0,212,255,.06) 0%, transparent 70%);
-      top: 10%; left: -10%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(0, 212, 255, .06) 0%, transparent 70%);
+      top: 10%;
+      left: -10%;
       pointer-events: none;
     }
+
     .hero::after {
       content: '';
       position: absolute;
-      width: 300px; height: 300px;
-      background: radial-gradient(circle, rgba(30,144,255,.07) 0%, transparent 70%);
-      bottom: 10%; right: -5%;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(30, 144, 255, .07) 0%, transparent 70%);
+      bottom: 10%;
+      right: -5%;
       pointer-events: none;
     }
 
@@ -126,8 +145,8 @@
       display: inline-flex;
       align-items: center;
       gap: .5rem;
-      background: rgba(30,144,255,.1);
-      border: 1px solid rgba(30,144,255,.35);
+      background: rgba(30, 144, 255, .1);
+      border: 1px solid rgba(30, 144, 255, .35);
       color: var(--secondary);
       padding: .45rem 1.3rem;
       border-radius: 30px;
@@ -136,30 +155,49 @@
       margin-bottom: 2rem;
       letter-spacing: .5px;
     }
+
     .hero-badge-dot {
-      width: 7px; height: 7px;
+      width: 7px;
+      height: 7px;
       background: var(--success);
       border-radius: 50%;
       box-shadow: 0 0 8px var(--success);
       animation: pulse 2s infinite;
     }
+
     @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: .4; }
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: .4;
+      }
     }
 
     .hero-icon {
-      width: 110px; height: 110px;
+      width: 110px;
+      height: 110px;
       border-radius: 28px;
       margin-bottom: 2rem;
       box-shadow:
-        0 0 30px rgba(30,144,255,.45),
-        0 0 60px rgba(30,144,255,.2);
+        0 0 30px rgba(30, 144, 255, .45),
+        0 0 60px rgba(30, 144, 255, .2);
       animation: float 4s ease-in-out infinite;
     }
+
     @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-10px);
+      }
     }
 
     h1 {
@@ -171,7 +209,7 @@
       letter-spacing: -.5px;
     }
 
-    .hero > p {
+    .hero>p {
       font-size: 1.1rem;
       color: var(--muted);
       max-width: 500px;
@@ -201,21 +239,31 @@
       cursor: pointer;
       border: none;
     }
-    .btn:hover { transform: translateY(-3px); }
+
+    .btn:hover {
+      transform: translateY(-3px);
+    }
 
     .btn-primary {
       background: linear-gradient(90deg, var(--primary), var(--secondary));
       color: #fff;
-      box-shadow: 0 4px 24px rgba(30,144,255,.4);
+      box-shadow: 0 4px 24px rgba(30, 144, 255, .4);
     }
-    .btn-primary:hover { box-shadow: 0 6px 32px rgba(30,144,255,.6); }
+
+    .btn-primary:hover {
+      box-shadow: 0 6px 32px rgba(30, 144, 255, .6);
+    }
 
     .btn-outline {
       background: transparent;
       color: var(--text);
       border: 1.5px solid var(--border);
     }
-    .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+
+    .btn-outline:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
 
     /* ── STATS BAR ──────────────────────────────── */
     .stats-bar {
@@ -226,9 +274,13 @@
       padding: 2.5rem 1.5rem;
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
-      background: rgba(22,27,34,.5);
+      background: rgba(22, 27, 34, .5);
     }
-    .stat { text-align: center; }
+
+    .stat {
+      text-align: center;
+    }
+
     .stat-value {
       font-size: 2rem;
       font-weight: 900;
@@ -239,7 +291,12 @@
       line-height: 1;
       margin-bottom: .25rem;
     }
-    .stat-label { font-size: .82rem; color: var(--muted); font-weight: 500; }
+
+    .stat-label {
+      font-size: .82rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
 
     /* ── FEATURES ───────────────────────────────── */
     .section {
@@ -248,13 +305,21 @@
       margin: 0 auto;
     }
 
-    .section-header { text-align: center; margin-bottom: 3.5rem; }
+    .section-header {
+      text-align: center;
+      margin-bottom: 3.5rem;
+    }
+
     .section-header h2 {
       font-size: clamp(1.7rem, 4vw, 2.4rem);
       font-weight: 800;
       margin-bottom: .6rem;
     }
-    .section-header p { color: var(--muted); font-size: .97rem; }
+
+    .section-header p {
+      color: var(--muted);
+      font-size: .97rem;
+    }
 
     .grid-3 {
       display: grid;
@@ -269,34 +334,71 @@
       padding: 1.8rem;
       transition: border-color .2s, transform .2s, box-shadow .2s;
     }
+
     .feat-card:hover {
-      border-color: rgba(30,144,255,.4);
+      border-color: rgba(30, 144, 255, .4);
       transform: translateY(-4px);
-      box-shadow: 0 8px 30px rgba(30,144,255,.12);
+      box-shadow: 0 8px 30px rgba(30, 144, 255, .12);
     }
 
     .feat-icon {
-      width: 50px; height: 50px;
+      width: 50px;
+      height: 50px;
       border-radius: 14px;
-      display: flex; align-items: center; justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-size: 1.4rem;
       margin-bottom: 1.1rem;
     }
-    .feat-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: .45rem; }
-    .feat-card p  { color: var(--muted); font-size: .9rem; line-height: 1.55; }
+
+    .feat-card h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: .45rem;
+    }
+
+    .feat-card p {
+      color: var(--muted);
+      font-size: .9rem;
+      line-height: 1.55;
+    }
 
     /* Color variants */
-    .icon-blue   { background: rgba(30,144,255,.15);  color: #1E90FF; }
-    .icon-cyan   { background: rgba(0,212,255,.12);   color: #00D4FF; }
-    .icon-green  { background: rgba(0,230,118,.12);   color: #00E676; }
-    .icon-orange { background: rgba(255,179,0,.12);   color: #FFB300; }
-    .icon-purple { background: rgba(147,112,219,.12); color: #9370DB; }
-    .icon-red    { background: rgba(255,82,82,.12);   color: #FF5252; }
+    .icon-blue {
+      background: rgba(30, 144, 255, .15);
+      color: #1E90FF;
+    }
+
+    .icon-cyan {
+      background: rgba(0, 212, 255, .12);
+      color: #00D4FF;
+    }
+
+    .icon-green {
+      background: rgba(0, 230, 118, .12);
+      color: #00E676;
+    }
+
+    .icon-orange {
+      background: rgba(255, 179, 0, .12);
+      color: #FFB300;
+    }
+
+    .icon-purple {
+      background: rgba(147, 112, 219, .12);
+      color: #9370DB;
+    }
+
+    .icon-red {
+      background: rgba(255, 82, 82, .12);
+      color: #FF5252;
+    }
 
     /* ── HOW IT WORKS ───────────────────────────── */
     .how-section {
       padding: 6rem 1.5rem;
-      background: linear-gradient(180deg, rgba(255,255,255,.015) 0%, transparent 100%);
+      background: linear-gradient(180deg, rgba(255, 255, 255, .015) 0%, transparent 100%);
     }
 
     .steps {
@@ -317,24 +419,38 @@
       border: 1px solid var(--border);
       transition: border-color .2s, box-shadow .2s;
     }
+
     .step:hover {
-      border-color: rgba(30,144,255,.35);
-      box-shadow: 0 4px 20px rgba(30,144,255,.1);
+      border-color: rgba(30, 144, 255, .35);
+      box-shadow: 0 4px 20px rgba(30, 144, 255, .1);
     }
 
     .step-num {
-      min-width: 40px; height: 40px;
+      min-width: 40px;
+      height: 40px;
       background: linear-gradient(135deg, var(--primary), var(--secondary));
       color: #fff;
       border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-weight: 800;
       font-size: .9rem;
-      box-shadow: 0 0 16px rgba(30,144,255,.4);
+      box-shadow: 0 0 16px rgba(30, 144, 255, .4);
       flex-shrink: 0;
     }
-    .step h4 { font-weight: 700; font-size: 1rem; margin-bottom: .35rem; }
-    .step p  { color: var(--muted); font-size: .88rem; line-height: 1.55; }
+
+    .step h4 {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: .35rem;
+    }
+
+    .step p {
+      color: var(--muted);
+      font-size: .88rem;
+      line-height: 1.55;
+    }
 
     /* ── ROLES ──────────────────────────────────── */
     .roles {
@@ -350,14 +466,17 @@
       padding: 2rem;
       border: 1px solid var(--border);
     }
+
     .role-card.docente {
-      background: linear-gradient(135deg, rgba(30,144,255,.08), rgba(0,212,255,.04));
-      border-color: rgba(30,144,255,.25);
+      background: linear-gradient(135deg, rgba(30, 144, 255, .08), rgba(0, 212, 255, .04));
+      border-color: rgba(30, 144, 255, .25);
     }
+
     .role-card.estudiante {
-      background: linear-gradient(135deg, rgba(0,230,118,.08), rgba(0,212,255,.04));
-      border-color: rgba(0,230,118,.25);
+      background: linear-gradient(135deg, rgba(0, 230, 118, .08), rgba(0, 212, 255, .04));
+      border-color: rgba(0, 230, 118, .25);
     }
+
     .role-title {
       font-size: 1.15rem;
       font-weight: 800;
@@ -366,7 +485,14 @@
       align-items: center;
       gap: .6rem;
     }
-    .role-list { list-style: none; display: flex; flex-direction: column; gap: .55rem; }
+
+    .role-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: .55rem;
+    }
+
     .role-list li {
       display: flex;
       align-items: center;
@@ -374,15 +500,27 @@
       font-size: .9rem;
       color: var(--muted);
     }
+
     .check {
-      width: 20px; height: 20px;
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-size: .65rem;
       flex-shrink: 0;
     }
-    .check-blue  { background: rgba(30,144,255,.2);  color: var(--primary);   }
-    .check-green { background: rgba(0,230,118,.2);   color: var(--success);   }
+
+    .check-blue {
+      background: rgba(30, 144, 255, .2);
+      color: var(--primary);
+    }
+
+    .check-green {
+      background: rgba(0, 230, 118, .2);
+      color: var(--success);
+    }
 
     /* ── DOWNLOAD ───────────────────────────────── */
     .download-section {
@@ -393,30 +531,34 @@
     .download-card {
       display: inline-block;
       background: linear-gradient(135deg, #161B22 0%, #0D1117 100%);
-      border: 1px solid rgba(30,144,255,.3);
+      border: 1px solid rgba(30, 144, 255, .3);
       border-radius: 28px;
       padding: 3.5rem 4rem;
       max-width: 500px;
       box-shadow:
-        0 0 60px rgba(30,144,255,.12),
-        inset 0 1px 0 rgba(255,255,255,.05);
+        0 0 60px rgba(30, 144, 255, .12),
+        inset 0 1px 0 rgba(255, 255, 255, .05);
       position: relative;
       overflow: hidden;
     }
+
     .download-card::before {
       content: '';
       position: absolute;
-      top: 0; left: 50%;
+      top: 0;
+      left: 50%;
       transform: translateX(-50%);
-      width: 200px; height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(30,144,255,.6), transparent);
+      width: 200px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(30, 144, 255, .6), transparent);
     }
 
     .download-icon {
-      width: 80px; height: 80px;
+      width: 80px;
+      height: 80px;
       border-radius: 22px;
       margin: 0 auto 1.5rem;
-      box-shadow: 0 0 30px rgba(30,144,255,.5);
+      box-shadow: 0 0 30px rgba(30, 144, 255, .5);
     }
 
     .download-card h2 {
@@ -424,7 +566,8 @@
       font-weight: 800;
       margin-bottom: .7rem;
     }
-    .download-card > p {
+
+    .download-card>p {
       color: var(--muted);
       margin-bottom: 2rem;
       font-size: .95rem;
@@ -444,6 +587,7 @@
       font-size: .83rem;
       border-top: 1px solid var(--border);
     }
+
     .footer-logo {
       display: flex;
       align-items: center;
@@ -451,7 +595,13 @@
       gap: .6rem;
       margin-bottom: .6rem;
     }
-    .footer-logo img { width: 24px; height: 24px; border-radius: 7px; }
+
+    .footer-logo img {
+      width: 24px;
+      height: 24px;
+      border-radius: 7px;
+    }
+
     .footer-logo span {
       font-weight: 700;
       background: linear-gradient(90deg, var(--primary), var(--secondary));
@@ -462,14 +612,29 @@
 
     /* ── RESPONSIVE ─────────────────────────────── */
     @media (max-width: 600px) {
-      .roles { grid-template-columns: 1fr; }
-      .download-card { padding: 2.5rem 1.5rem; }
-      .stats-bar { gap: 2rem; }
-      nav { padding: 1rem 1.2rem; }
-      h1 { font-size: 2.2rem; }
+      .roles {
+        grid-template-columns: 1fr;
+      }
+
+      .download-card {
+        padding: 2.5rem 1.5rem;
+      }
+
+      .stats-bar {
+        gap: 2rem;
+      }
+
+      nav {
+        padding: 1rem 1.2rem;
+      }
+
+      h1 {
+        font-size: 2.2rem;
+      }
     }
   </style>
 </head>
+
 <body>
 
   <!-- NAV -->
@@ -478,26 +643,24 @@
       <img src="icon.png" alt="InClass icon" />
       <span class="nav-logo-text">InClass</span>
     </a>
-    <span class="nav-badge">v2.0</span>
+    <span class="nav-badge">v1.0</span>
   </nav>
 
   <!-- HERO -->
   <section class="hero">
-    <div class="hero-badge">
-      <span class="hero-badge-dot"></span>
-      Sistema activo en Railway + Supabase
-    </div>
+
 
     <img src="icon.png" alt="InClass" class="hero-icon" />
 
     <h1>Asistencia universitaria<br /><span class="gradient-text">sin listas, sin papel</span></h1>
 
-    <p>InClass registra automáticamente la asistencia de tus estudiantes usando reconocimiento facial con IA en tiempo real desde cualquier dispositivo Android.</p>
+    <p>InClass registra automáticamente la asistencia de tus estudiantes usando reconocimiento facial con IA en tiempo
+      real desde cualquier dispositivo Android.</p>
 
     <div class="btn-group">
       <a href="#descargar" class="btn btn-primary">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-          <path d="M12 15V3m0 12-4-4m4 4 4-4M2 17l.621 2.485A2 2 0 0 0 4.561 21h14.878a2 2 0 0 0 1.94-1.515L22 17"/>
+          <path d="M12 15V3m0 12-4-4m4 4 4-4M2 17l.621 2.485A2 2 0 0 0 4.561 21h14.878a2 2 0 0 0 1.94-1.515L22 17" />
         </svg>
         Descargar APK
       </a>
@@ -535,7 +698,8 @@
       <div class="feat-card">
         <div class="feat-icon icon-blue">👁️</div>
         <h3>Reconocimiento en tiempo real</h3>
-        <p>La cámara detecta y verifica el rostro automáticamente con InsightFace buffalo_l. Sin botones, sin demoras.</p>
+        <p>La cámara detecta y verifica el rostro automáticamente con InsightFace buffalo_l. Sin botones, sin demoras.
+        </p>
       </div>
       <div class="feat-card">
         <div class="feat-icon icon-cyan">📊</div>
@@ -560,7 +724,8 @@
       <div class="feat-card">
         <div class="feat-icon icon-red">☁️</div>
         <h3>100% en la nube</h3>
-        <p>FastAPI en Railway, base de datos Supabase con RLS. Disponible desde cualquier lugar, sin infraestructura propia.</p>
+        <p>FastAPI en Railway, base de datos Supabase con RLS. Disponible desde cualquier lugar, sin infraestructura
+          propia.</p>
       </div>
     </div>
   </section>
@@ -613,21 +778,24 @@
           <div class="step-num">1</div>
           <div>
             <h4>Regístrate y toma 5 fotos</h4>
-            <p>El estudiante se registra con su código universitario y captura 5 fotos de su rostro desde diferentes ángulos. El modelo genera embeddings de 512 dimensiones para máxima precisión.</p>
+            <p>El estudiante se registra con su código universitario y captura 5 fotos de su rostro desde diferentes
+              ángulos. El modelo genera embeddings de 512 dimensiones para máxima precisión.</p>
           </div>
         </div>
         <div class="step">
           <div class="step-num">2</div>
           <div>
             <h4>El docente abre la sesión</h4>
-            <p>El docente inicia una sesión desde su panel. Se abre una ventana de 15 minutos durante la cual los estudiantes pueden registrar su asistencia.</p>
+            <p>El docente inicia una sesión desde su panel. Se abre una ventana de 15 minutos durante la cual los
+              estudiantes pueden registrar su asistencia.</p>
           </div>
         </div>
         <div class="step">
           <div class="step-num">3</div>
           <div>
             <h4>La cámara te reconoce sola</h4>
-            <p>El estudiante abre la pantalla de asistencia, apunta la cámara a su rostro y el sistema lo identifica automáticamente. Sin tocar nada más. La asistencia queda registrada en menos de 2 segundos.</p>
+            <p>El estudiante abre la pantalla de asistencia, apunta la cámara a su rostro y el sistema lo identifica
+              automáticamente. Sin tocar nada más. La asistencia queda registrada en menos de 2 segundos.</p>
           </div>
         </div>
       </div>
@@ -639,10 +807,11 @@
     <div class="download-card">
       <img src="icon.png" alt="InClass" class="download-icon" />
       <h2>Descarga <span class="gradient-text">InClass</span></h2>
-      <p>Disponible para Android. Instala el APK directamente en tu dispositivo y comienza a usar el sistema de asistencia facial.</p>
+      <p>Disponible para Android. Instala el APK directamente en tu dispositivo y comienza a usar el sistema de
+        asistencia facial.</p>
       <a href="inclass.apk" class="btn btn-primary" download style="justify-content:center; width:100%">
         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-          <path d="M12 15V3m0 12-4-4m4 4 4-4M2 17l.621 2.485A2 2 0 0 0 4.561 21h14.878a2 2 0 0 0 1.94-1.515L22 17"/>
+          <path d="M12 15V3m0 12-4-4m4 4 4-4M2 17l.621 2.485A2 2 0 0 0 4.561 21h14.878a2 2 0 0 0 1.94-1.515L22 17" />
         </svg>
         Descargar APK (Android)
       </a>
@@ -656,8 +825,10 @@
       <img src="icon.png" alt="InClass" />
       <span>InClass</span>
     </div>
-    <p>Control de Asistencia con Reconocimiento Facial &mdash; 2025</p>
+    <p>Control de Asistencia con Reconocimiento Facial &mdash; 2026</p>
+    <p style="margin-top:.5rem">&copy; 2026 Nicoll Laguna. Todos los derechos reservados.</p>
   </footer>
 
 </body>
+
 </html>
