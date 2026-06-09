@@ -121,7 +121,7 @@ async def recognize_from_frame(sesion_id: str, payload: dict, user=Depends(requi
 
     # Obtiene info del docente
     docente_info = supabase.table("docentes").select("nombre").eq(
-        "id", s["curso_id"]
+        "id", s["cursos"]["docente_id"]
     ).execute()
     nombre_docente = docente_info.data[0]["nombre"] if docente_info.data else "Docente"
     # Email confirmación al estudiante
