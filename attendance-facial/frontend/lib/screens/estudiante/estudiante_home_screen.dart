@@ -129,75 +129,55 @@ class _EstudianteHomeScreenState extends State<EstudianteHomeScreen> {
 
                 const Gap(14),
 
-                Expanded(
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: _MenuCard(
-                                icon: Icons.book_rounded,
-                                imagePath: 'assets/icons/ic_cursos.png',
-                                title: 'Mis Cursos',
-                                subtitle: 'Ver mis materias',
-                                color: AppTheme.secondary,
-                                delay: 250,
-                                onTap: () => Navigator.push(context,
-                                    MaterialPageRoute(builder: (_) => MyCoursesScreen())),
-                              ),
-                            ),
-                            const Gap(14),
-                            Expanded(
-                              child: _MenuCard(
-                                icon: Icons.add_circle_rounded,
-                                imagePath: 'assets/icons/ic_unirse.png',
-                                title: 'Unirse a Curso',
-                                subtitle: 'Ingresar código',
-                                color: AppTheme.primary,
-                                delay: 330,
-                                onTap: () => Navigator.push(context,
-                                    MaterialPageRoute(builder: (_) => const JoinCourseScreen())),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Gap(14),
-                      Expanded(
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: _MenuCard(
-                                icon: Icons.face_retouching_natural,
-                                imagePath: 'assets/icons/ic_asistencia.png',
-                                title: 'Registrar Asistencia',
-                                subtitle: 'Sesión activa',
-                                color: AppTheme.success,
-                                delay: 410,
-                                onTap: () => Navigator.push(context,
-                                    MaterialPageRoute(builder: (_) => const AttendanceScreen())),
-                              ),
-                            ),
-                            const Gap(14),
-                            Expanded(
-                              child: _MenuCard(
-                                icon: Icons.history_rounded,
-                                imagePath: 'assets/icons/ic_historial.png',
-                                title: 'Mi Historial',
-                                subtitle: 'Ver asistencias',
-                                color: AppTheme.warning,
-                                delay: 490,
-                                onTap: () => Navigator.push(context,
-                                    MaterialPageRoute(builder: (_) => const HistoryScreen())),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Gap(16),
-                    ],
-                  ),
+                GridView.count(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 14,
+                  mainAxisSpacing: 14,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  childAspectRatio: 0.9,
+                  children: [
+                    _MenuCard(
+                      icon: Icons.book_rounded,
+                      imagePath: 'assets/icons/ic_cursos.png',
+                      title: 'Mis Cursos',
+                      subtitle: 'Ver mis materias',
+                      color: AppTheme.secondary,
+                      delay: 250,
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => MyCoursesScreen())),
+                    ),
+                    _MenuCard(
+                      icon: Icons.add_circle_rounded,
+                      imagePath: 'assets/icons/ic_unirse.png',
+                      title: 'Unirse a Curso',
+                      subtitle: 'Ingresar código',
+                      color: AppTheme.primary,
+                      delay: 330,
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => const JoinCourseScreen())),
+                    ),
+                    _MenuCard(
+                      icon: Icons.face_retouching_natural,
+                      imagePath: 'assets/icons/ic_asistencia.png',
+                      title: 'Registrar Asistencia',
+                      subtitle: 'Sesión activa',
+                      color: AppTheme.success,
+                      delay: 410,
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => const AttendanceScreen())),
+                    ),
+                    _MenuCard(
+                      icon: Icons.history_rounded,
+                      imagePath: 'assets/icons/ic_historial.png',
+                      title: 'Mi Historial',
+                      subtitle: 'Ver asistencias',
+                      color: AppTheme.warning,
+                      delay: 490,
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => const HistoryScreen())),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -244,7 +224,7 @@ class _MenuCard extends StatelessWidget {
             ),
           ],
         ),
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(12),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -252,24 +232,28 @@ class _MenuCard extends StatelessWidget {
             imagePath != null
                 ? Image.asset(
                     imagePath!,
-                    width: 72,
-                    height: 72,
+                    width: 58,
+                    height: 58,
                     fit: BoxFit.contain,
                     errorBuilder: (ctx, err, st) =>
-                        Icon(icon, color: color, size: 56),
+                        Icon(icon, color: color, size: 44),
                   )
-                : Icon(icon, color: color, size: 56),
-            const Gap(14),
+                : Icon(icon, color: color, size: 44),
+            const Gap(10),
             Text(title,
                 textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.poppins(
-                  fontSize: 16,
+                  fontSize: 13,
                   fontWeight: FontWeight.w700,
                   color: AppTheme.textPrimary,
                 )),
-            const Gap(4),
+            const Gap(3),
             Text(subtitle,
                 textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.poppins(
                   fontSize: 11,
                   color: AppTheme.textSecondary,

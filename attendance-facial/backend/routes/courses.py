@@ -81,6 +81,16 @@ async def join_course(data: JoinCourse, user=Depends(require_estudiante)):
         elif estado == "pendiente":
             raise HTTPException(status_code=400, detail="Tu solicitud ya está pendiente de aprobación.")
 
+    # Verifica que el estudiante tiene registro facial completo
+    estudiante_check = supabase.table("estudiantes").select("id").eq(
+        "id", user["sub"]
+    ).execute()
+    if not estudiante_check.data:
+        raise HTTPException(
+            status_code=400,
+            detail="Tu registro facial no está completo. Por favor vuelve a registrarte en la aplicación."
+        )
+
     # Crea solicitud
     supabase.table("matriculas").insert({
         "estudiante_id": user["sub"],

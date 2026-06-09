@@ -129,75 +129,55 @@ class _DocenteHomeScreenState extends State<DocenteHomeScreen> {
 
                 const Gap(14),
 
-                Expanded(
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: _MenuCard(
-                                icon: Icons.book_rounded,
-                                imagePath: 'assets/icons/ic_cursos.png',
-                                title: 'Mis Cursos',
-                                subtitle: 'Gestionar cursos',
-                                color: AppTheme.primary,
-                                delay: 250,
-                                onTap: () => Navigator.push(context,
-                                    MaterialPageRoute(builder: (_) => const CoursesScreen())),
-                              ),
-                            ),
-                            const Gap(14),
-                            Expanded(
-                              child: _MenuCard(
-                                icon: Icons.people_rounded,
-                                imagePath: 'assets/icons/ic_solicitudes.png',
-                                title: 'Solicitudes',
-                                subtitle: 'Aprobar matrículas',
-                                color: AppTheme.warning,
-                                delay: 330,
-                                onTap: () => Navigator.push(context,
-                                    MaterialPageRoute(builder: (_) => const PendingEnrollmentsScreen())),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Gap(14),
-                      Expanded(
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: _MenuCard(
-                                icon: Icons.play_circle_rounded,
-                                imagePath: 'assets/icons/ic_sesion.png',
-                                title: 'Iniciar Sesión',
-                                subtitle: 'Habilitar asistencia',
-                                color: AppTheme.success,
-                                delay: 410,
-                                onTap: () => Navigator.push(context,
-                                    MaterialPageRoute(builder: (_) => const SelectCourseSessionScreen())),
-                              ),
-                            ),
-                            const Gap(14),
-                            Expanded(
-                              child: _MenuCard(
-                                icon: Icons.bar_chart_rounded,
-                                imagePath: 'assets/icons/ic_reportes.png',
-                                title: 'Reportes',
-                                subtitle: 'Ver y descargar',
-                                color: AppTheme.secondary,
-                                delay: 490,
-                                onTap: () => Navigator.push(context,
-                                    MaterialPageRoute(builder: (_) => const ReportsDocenteScreen())),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Gap(16),
-                    ],
-                  ),
+                GridView.count(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 14,
+                  mainAxisSpacing: 14,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  childAspectRatio: 0.9,
+                  children: [
+                    _MenuCard(
+                      icon: Icons.book_rounded,
+                      imagePath: 'assets/icons/ic_cursos.png',
+                      title: 'Mis Cursos',
+                      subtitle: 'Gestionar cursos',
+                      color: AppTheme.primary,
+                      delay: 250,
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => const CoursesScreen())),
+                    ),
+                    _MenuCard(
+                      icon: Icons.people_rounded,
+                      imagePath: 'assets/icons/ic_solicitudes.png',
+                      title: 'Solicitudes',
+                      subtitle: 'Aprobar matrículas',
+                      color: AppTheme.warning,
+                      delay: 330,
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => const PendingEnrollmentsScreen())),
+                    ),
+                    _MenuCard(
+                      icon: Icons.play_circle_rounded,
+                      imagePath: 'assets/icons/ic_sesion.png',
+                      title: 'Iniciar Sesión',
+                      subtitle: 'Habilitar asistencia',
+                      color: AppTheme.success,
+                      delay: 410,
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => const SelectCourseSessionScreen())),
+                    ),
+                    _MenuCard(
+                      icon: Icons.bar_chart_rounded,
+                      imagePath: 'assets/icons/ic_reportes.png',
+                      title: 'Reportes',
+                      subtitle: 'Ver y descargar',
+                      color: AppTheme.secondary,
+                      delay: 490,
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => const ReportsDocenteScreen())),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -244,7 +224,7 @@ class _MenuCard extends StatelessWidget {
             ),
           ],
         ),
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(12),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -252,24 +232,28 @@ class _MenuCard extends StatelessWidget {
             imagePath != null
                 ? Image.asset(
                     imagePath!,
-                    width: 72,
-                    height: 72,
+                    width: 58,
+                    height: 58,
                     fit: BoxFit.contain,
                     errorBuilder: (ctx, err, st) =>
-                        Icon(icon, color: color, size: 56),
+                        Icon(icon, color: color, size: 44),
                   )
-                : Icon(icon, color: color, size: 56),
-            const Gap(14),
+                : Icon(icon, color: color, size: 44),
+            const Gap(10),
             Text(title,
                 textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.poppins(
-                  fontSize: 16,
+                  fontSize: 13,
                   fontWeight: FontWeight.w700,
                   color: AppTheme.textPrimary,
                 )),
-            const Gap(4),
+            const Gap(3),
             Text(subtitle,
                 textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.poppins(
                   fontSize: 11,
                   color: AppTheme.textSecondary,
