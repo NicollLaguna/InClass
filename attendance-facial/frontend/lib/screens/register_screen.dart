@@ -946,9 +946,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
           Row(children: [
             const Icon(Icons.tips_and_updates_outlined, color: Colors.blue, size: 16),
             const Gap(6),
-            Text('Recomendaciones para mejor precisión',
-                style: GoogleFonts.poppins(
-                    fontSize: 12, fontWeight: FontWeight.w600, color: Colors.blue[700])),
+            Expanded(
+              child: Text('Recomendaciones para mejor precisión',
+                  style: GoogleFonts.poppins(
+                      fontSize: 12, fontWeight: FontWeight.w600, color: Colors.blue[700])),
+            ),
           ]),
           const Gap(8),
           ...items.map((item) => Padding(

@@ -269,35 +269,31 @@ class _LoginScreenState extends State<LoginScreen> {
                 Gap(isSmall ? 18 : 28),
 
                 // Register link
-                Column(
+                Wrap(
+                  alignment: WrapAlignment.center,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          '¿No tienes cuenta? ',
-                          style: GoogleFonts.poppins(
-                            color: AppTheme.textSecondary,
-                            fontSize: 13,
-                          ),
+                    Text(
+                      '¿No tienes cuenta? ',
+                      style: GoogleFonts.poppins(
+                        color: AppTheme.textSecondary,
+                        fontSize: 13,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => RegisterScreen(initialRole: _selectedRole),
                         ),
-                        GestureDetector(
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => RegisterScreen(initialRole: _selectedRole),
-                            ),
-                          ),
-                          child: Text(
-                            'Regístrate',
-                            style: GoogleFonts.poppins(
-                              color: AppTheme.primary,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 13,
-                            ),
-                          ),
+                      ),
+                      child: Text(
+                        'Regístrate',
+                        style: GoogleFonts.poppins(
+                          color: AppTheme.primary,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13,
                         ),
-                      ],
+                      ),
                     ),
                   ],
                 ).animate().fadeIn(delay: 800.ms),

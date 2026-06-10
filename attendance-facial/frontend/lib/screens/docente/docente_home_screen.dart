@@ -47,6 +47,8 @@ class _DocenteHomeScreenState extends State<DocenteHomeScreen> {
   @override
   Widget build(BuildContext context) {
     final firstName = _nombre.isNotEmpty ? _nombre.split(' ')[0] : 'Docente';
+    final screenW = MediaQuery.of(context).size.width;
+    final cardAspectRatio = ((screenW - 48 - 14) / 2) / 158;
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(gradient: AppTheme.splashGradient),
@@ -135,7 +137,7 @@ class _DocenteHomeScreenState extends State<DocenteHomeScreen> {
                   mainAxisSpacing: 14,
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  childAspectRatio: 0.9,
+                  childAspectRatio: cardAspectRatio,
                   children: [
                     _MenuCard(
                       icon: Icons.book_rounded,
@@ -209,6 +211,13 @@ class _MenuCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenW = MediaQuery.of(context).size.width;
+    final isSmall = screenW < 370;
+    final iconSize = isSmall ? 44.0 : 54.0;
+    final titleSize = isSmall ? 11.5 : 13.0;
+    final subtitleSize = isSmall ? 10.0 : 11.0;
+    final vGap = isSmall ? 6.0 : 9.0;
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -224,7 +233,7 @@ class _MenuCard extends StatelessWidget {
             ),
           ],
         ),
-        padding: const EdgeInsets.all(12),
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: isSmall ? 8 : 12),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -232,30 +241,30 @@ class _MenuCard extends StatelessWidget {
             imagePath != null
                 ? Image.asset(
                     imagePath!,
-                    width: 58,
-                    height: 58,
+                    width: iconSize,
+                    height: iconSize,
                     fit: BoxFit.contain,
                     errorBuilder: (ctx, err, st) =>
-                        Icon(icon, color: color, size: 44),
+                        Icon(icon, color: color, size: iconSize - 10),
                   )
-                : Icon(icon, color: color, size: 44),
-            const Gap(10),
+                : Icon(icon, color: color, size: iconSize - 10),
+            Gap(vGap),
             Text(title,
                 textAlign: TextAlign.center,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.poppins(
-                  fontSize: 13,
+                  fontSize: titleSize,
                   fontWeight: FontWeight.w700,
                   color: AppTheme.textPrimary,
                 )),
-            const Gap(3),
+            const Gap(2),
             Text(subtitle,
                 textAlign: TextAlign.center,
-                maxLines: 1,
+                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.poppins(
-                  fontSize: 11,
+                  fontSize: subtitleSize,
                   color: AppTheme.textSecondary,
                 )),
           ],
